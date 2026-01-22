@@ -327,6 +327,53 @@
             margin-bottom: 0;
         }
 
+        /* Collapsible summary */
+        .summary-collapsible {
+            margin: 2em 0;
+            border: 1px solid var(--color-border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .summary-collapsible summary {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            padding: 16px 24px;
+            background: #f8f9fb;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-collapsible summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .summary-collapsible summary::before {
+            content: '▶';
+            font-size: 0.7rem;
+            transition: transform 0.2s ease;
+        }
+
+        .summary-collapsible[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .summary-collapsible summary:hover {
+            background: #f0f2f5;
+        }
+
+        .summary-content {
+            padding: 24px;
+        }
+
+        .summary-content p:last-child {
+            margin-bottom: 0;
+        }
+
         /* Definition box */
         .definition-box {
             border-left: 3px solid var(--color-text);
@@ -408,7 +455,7 @@
         <header class="article-header">
             <h1>The Myth of RLVR</h1>
             <p class="article-subtitle">Why Verifiable Rewards Aren't Enough and What It Takes to Build Open-World Agents</p>
-            <p class="article-meta"><span class="author">Sunil Mallya</span> · January 2026</p>
+            <p class="article-meta"><span class="author">Sunil Mallya + Claude Code</span> · January 2026</p>
         </header>
 
         <article>
@@ -516,10 +563,7 @@
                 Policy-gradient and trajectory-sampling methods like <strong>PPO</strong>, <strong>GRPO</strong>, <strong>REINFORCE</strong>, and related variants attempt to assign responsibility for an outcome across a sequence of actions. When rewards are delayed, sparse, or global, the signal-to-noise ratio collapses.
             </p>
 
-            <p>This has nothing to do with whether the reward is true.</p>
-
-            <p>
-                A single scalar at the end of a long trajectory does not explain which decisions mattered, why they mattered, or how to change them. This is why RL variance explodes with horizon, why sample complexity scales poorly, and why perfect verifiers do not magically make RL efficient.
+            <p>This has nothing to do with whether the reward is true. A single scalar at the end of a long trajectory does not explain which decisions mattered, why they mattered, or how to change them. This is why RL variance explodes with horizon, why sample complexity scales poorly, and why perfect verifiers do not magically make RL efficient.
             </p>
 
             <p><strong>RLVR improves reward accuracy. It does not improve reward bandwidth.</strong></p>
@@ -775,6 +819,33 @@
             <blockquote>
                 <p><strong>The myth of RLVR is the belief that correctness is the bottleneck. It isn't. The real bottleneck is everything that happens when correctness cannot be verified and everything we fail to learn when failure is thrown away.</strong></p>
             </blockquote>
+
+            <hr>
+
+            <details class="summary-collapsible">
+                <summary>TL;DR: The 3 Minute Version</summary>
+                <div class="summary-content">
+
+            <p><strong>The core claim:</strong> RLVR (Reinforcement Learning with Verifiable Rewards) works, but not because it solves hard problems. It works because it sidesteps them. The belief that "correctness is the bottleneck" is the myth. The real bottlenecks are information flow, credit assignment, and learning from failure, and verifiable rewards don't address any of these.</p>
+
+            <p><strong>What RLVR actually is:</strong> A narrow class of problems where (1) correctness is unambiguous, (2) verification is programmatic, and (3) checking is cheap. If you can write <code>reward = float(output == ground_truth)</code>, you're in RLVR territory. Most real world tasks don't qualify.</p>
+
+            <p><strong>Where it works:</strong> Math competitions, coding challenges, formal proofs. Short horizons, stable rules, self-contained reasoning. These are verifiable problems, which is why benchmarks fall quickly.</p>
+
+            <p><strong>Why it fails elsewhere:</strong> A binary pass/fail at the end of a 50-step trajectory carries almost no information about which steps to change. The noise in credit assignment grows quadratically with horizon, making a 50-step task ~2,500x harder to learn from than a 1-step task. Verification is not teaching.</p>
+
+            <p><strong>The pretraining dependency:</strong> RLVR's success with LLMs isn't a breakthrough in RL. It's parasitic on pretraining. The base model arrives nearly competent; RLVR just steers at the surface. Studies show RLVR-trained models don't solve problems the base model can't solve with enough samples. It sharpens the blade but doesn't forge a new one.</p>
+
+            <p><strong>Is it even RL?</strong> Much of what's called RLVR is actually rejection sampling followed by supervised learning. Generate candidates, filter by verifier, fine-tune on successes. No temporal credit assignment, no value function. The "RL" is often vestigial.</p>
+
+            <p><strong>The simulation trap:</strong> We build fake worlds (WebArena, OSWorld, simulated Salesforce) because real worlds are too hard to verify, then celebrate progress on fake worlds as evidence agents are ready for real ones. But the gap is structural, not incremental. Real environments are non-stationary: Amazon's checkout flow today isn't what it was six months ago, but your simulator is frozen in time. Real actions are irreversible: when your agent sends the wrong email, deletes the wrong file, or locks in bad contract terms, there's no reset button. Real tasks are ambiguous: "handle this customer complaint" doesn't come with a rubric, and the right answer depends on context no one wrote down. Real deployment surfaces the long tail: the 1% of cases that break your agent in production are precisely the ones that couldn't be templated in training. And here's the deeper problem: an agent trained to "advance a Salesforce opportunity" by clicking specific buttons in a specific layout has learned the simulator, not the task. Move it to a different company's Salesforce instance with different fields, different stages, different workflows, and it's lost. The knowledge that matters, what business goal this action achieves, was never disentangled from the surface mechanics of one particular configuration.</p>
+
+            <p><strong>What actually scales:</strong> Hybrid systems that reduce how much RL they need. Predictive modeling over blind exploration. Search and planning over pure policy learning. Tool use. Memory and retrieval. Offline learning from real trajectories including failures.</p>
+
+            <p><strong>The bottom line:</strong> RLVR belongs in the toolbox, not at the center of agent design. Real intelligence emerges in messy regimes where feedback is delayed, environments shift, and failure carries structure. Those are precisely the settings where RLVR runs out of road.</p>
+
+                </div>
+            </details>
 
             <footer class="article-footer">
                 <p>Insights on reinforcement learning and the path to general-purpose AI agents.</p>
