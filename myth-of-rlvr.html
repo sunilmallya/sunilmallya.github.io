@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Myth of RLVR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #fcfcfc;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #555;
+            --color-text-muted: #888;
+            --color-accent: #2563eb;
+            --color-accent-hover: #1d4ed8;
+            --color-border: #e5e5e5;
+            --color-code-bg: #f5f5f5;
+            --color-blockquote-border: #2563eb;
+            --color-blockquote-bg: #f8fafc;
+            --max-width: 1400px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header / Navigation */
+        .site-header {
+            padding: 40px 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .site-header a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .site-header a:hover {
+            color: var(--color-text);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 24px 100px;
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .hero-image-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .article-header h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .article-subtitle {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .article-meta {
+            margin-top: 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .article-meta .author {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Typography */
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        h2 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 2.5em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 2em;
+            margin-bottom: 0.6em;
+            line-height: 1.4;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            margin: 2em 0;
+            padding: 1.25em 1.5em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--color-text);
+        }
+
+        blockquote p strong {
+            font-weight: 700;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+            font-size: 0.88em;
+            background: var(--color-code-bg);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: #c7254e;
+        }
+
+        pre {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 1.25em 1.5em;
+            overflow-x: auto;
+            margin: 1.75em 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d4d4d4;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-keyword { color: #569cd6; }
+        .code-function { color: #dcdcaa; }
+        .code-operator { color: #d4d4d4; }
+        .code-value { color: #b5cea8; }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+            padding-left: 0.25em;
+        }
+
+        li::marker {
+            color: var(--color-text-muted);
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: 3em 0;
+        }
+
+        /* Example boxes */
+        .example-label {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-text-secondary);
+            margin-bottom: 12px;
+        }
+
+        .example-box {
+            background: #f8f9fb;
+            border: 1px solid #e2e6ed;
+            border-radius: 8px;
+            padding: 24px 28px;
+            margin: 0 0 2em;
+        }
+
+        .example-box ul {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .example-box li {
+            position: relative;
+            padding: 16px 0 16px 32px;
+            margin: 0;
+            border-bottom: 1px solid #e8ebf0;
+        }
+
+        .example-box li:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .example-box li:first-child {
+            padding-top: 0;
+        }
+
+        .example-box li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 22px;
+            width: 16px;
+            height: 16px;
+            background: var(--color-accent);
+            border-radius: 4px;
+            opacity: 0.15;
+        }
+
+        .example-box li:first-child::before {
+            top: 6px;
+        }
+
+        .example-box li::after {
+            content: counter(example-counter);
+            counter-increment: example-counter;
+            position: absolute;
+            left: 4px;
+            top: 22px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--color-accent);
+        }
+
+        .example-box li:first-child::after {
+            top: 6px;
+        }
+
+        .example-box {
+            counter-reset: example-counter;
+        }
+
+        .example-box li p {
+            margin-top: 1em;
+            margin-bottom: 0;
+        }
+
+        .example-box li p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Example box with just paragraphs (no list) */
+        .example-box > p {
+            margin-bottom: 1em;
+        }
+
+        .example-box > p:first-child {
+            margin-top: 0;
+        }
+
+        .example-box > p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Definition box */
+        .definition-box {
+            border-left: 3px solid var(--color-text);
+            padding-left: 20px;
+            margin: 1.5em 0;
+        }
+
+        .definition-box .definition-label {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .definition-box ol {
+            margin: 0;
+            padding-left: 1.2em;
+        }
+
+        .definition-box li {
+            padding: 4px 0;
+            font-size: 1rem;
+        }
+
+        /* Section styling */
+        .section-intro {
+            font-size: 1.05rem;
+            color: var(--color-text-secondary);
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4em;
+            padding-top: 2em;
+            border-top: 1px solid var(--color-border);
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            html {
+                font-size: 17px;
+            }
+
+            .article-header h1 {
+                font-size: 1.9rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+            }
+
+            .article-container {
+                padding: 16px 20px 80px;
+            }
+
+            .site-header {
+                padding: 24px 20px;
+            }
+        }
+
+        @media (min-width: 1800px) {
+            .article-container {
+                max-width: 1600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <a href="#">&larr; Back to blog</a>
+    </header>
+
+    <main class="article-container">
+        <header class="article-header">
+            <h1>The Myth of RLVR</h1>
+            <p class="article-subtitle">Why Verifiable Rewards Aren't Enough and What It Takes to Build Open-World Agents</p>
+            <p class="article-meta"><span class="author">Sunil Mallya</span> · January 2026</p>
+        </header>
+
+        <article>
+            <div class="hero-image-container">
+                <img src="myth-of-rlvr.png" alt="The Myth of RLVR" class="hero-image">
+            </div>
+
+            <p>
+                RLVR is real. It works. But the claims being made about it do not survive contact with the actual technical constraints. The idea that RLVR unlocks scalable intelligence, that it forms the foundation for general-purpose agents, or that it solves the hard problems of learning isn't quite true. The central mistake is subtle but consequential:
+            </p>
+
+            <blockquote>
+                <p><strong>The myth of RLVR is the belief that correctness is the bottleneck.</strong></p>
+            </blockquote>
+
+            <p>It isn't.</p>
+
+            <p>
+                Verifiable rewards haven't changed the fundamental limitations of reinforcement learning, instead they've just made reward signals cheaper to produce. The real bottlenecks are <strong>information flow</strong>, <strong>credit assignment</strong>, and <strong>trajectory-level learning</strong>, i.e. How does information about the goal propagate back through a long sequence of actions? How does the agent determine which decisions actually mattered? How does it learn from entire trajectories rather than isolated steps? These are the hard problems of RL, they have always existed and don't go away. Verifiable rewards don't fix any of them.
+            </p>
+
+            <p class="example-label">Consider these examples in an enterprise setting:</p>
+            <div class="example-box">
+                <ul>
+                    <li>Ask an agent to resolve a customer support ticket: it reads the history, pulls up the account, checks three internal tools, drafts a response, escalates to a specialist, waits, follows up, closes the ticket. Was the customer satisfied? Verifiable. Was the escalation necessary, or did the agent miss something obvious in step two? Invisible.</li>
+                    <li>Ask an agent to source a vendor for a new software contract: it researches options, compares pricing, schedules calls, negotiates terms, flags risks to legal. A verifier can confirm a contract was signed. It cannot tell you whether the agent left money on the table, overlooked a better vendor, or introduced risks that will surface in six months.</li>
+                </ul>
+            </div>
+
+            <p>
+                The pattern is the same: long horizons, entangled decisions, and outcomes that obscure the reasoning that produced them. A verifier sees the destination; it cannot see the path and in reinforcement learning, the path is everything (remember <a href="https://en.wikipedia.org/wiki/Bellman_equation">Bellman equations</a>?). This is why RL did not start with final outcomes, but with Bellman's recursive view of value: future consequences are pulled backward to earlier states so learning can happen before the episode ends, i.e. turn delayed outcomes into intermediate learning signals. By evaluating how good it is to be <em>in this state</em>, the agent can distinguish early mistakes from late ones, near-misses from dead ends, and recoverable situations from unrecoverable ones. That is the essence of credit assignment: attributing success or failure to the right decisions at the right time, rather than collapsing an entire trajectory into a single judgment at the end. Modern RLVR-style recipes, particularly critic-free approaches like GRPO remove this machinery. They replace state-level evaluation with outcome ranking and defer all learning to a terminal pass/fail signal. A sparse binary reward fifty steps later does not solve credit assignment. It is the worst case for the very machinery credit assignment was invented to solve. Worse, default RLVR recipes systematically underutilize the most informative data available: failures.
+            </p>
+
+            <blockquote>
+                <p><strong>RLVR optimizes for worlds we can grade, not worlds we live in.</strong></p>
+            </blockquote>
+
+            <p>We'll discuss more on the importance of value functions and the critic later in this blog.</p>
+
+            <hr>
+
+            <h2>1. What RLVR Actually Is (Once You Remove the Marketing)</h2>
+
+            <p>RLVR is not a philosophy or a training ideology. It is a property of an environment.</p>
+
+            <div class="definition-box">
+                <div class="definition-label">An RL problem qualifies as RLVR only if:</div>
+                <ol>
+                    <li>There exists a single, unambiguous notion of correctness</li>
+                    <li>Correctness can be programmatically verified</li>
+                    <li>Verification is cheap enough to support iterative optimization</li>
+                </ol>
+            </div>
+
+            <p>You are in RLVR territory if you can write:</p>
+
+            <pre><code><span class="code-keyword">reward</span> <span class="code-operator">=</span> <span class="code-function">float</span>(model_output <span class="code-operator">==</span> ground_truth)</code></pre>
+
+            <p>
+                If you cannot, because correctness is subjective, contextual, delayed, multivalued, or preference-dependent, then RLVR does not apply. You are back in RLHF, RLAIF, surrogate reward modeling, or heuristic supervision, regardless of what you call it.
+            </p>
+
+            <p>
+                This distinction matters because RLVR is often discussed as if it were a general paradigm. It is not. It is a narrow class of problems where verification collapses to computation. That narrowness explains both why RLVR can look impressive and why its promise does not generalize.
+            </p>
+
+            <hr>
+
+            <h2>2. The Thin Slice Where RLVR Works</h2>
+
+            <p>
+                Jason Wei articulates a useful heuristic: the ease of training an AI system is proportional to how verifiable the task is. Call this <em><a href="https://www.jasonwei.net/blog/asymmetry-of-verification-and-verifiers-law">Verifier's Law</a></em>.
+            </p>
+
+            <p>
+                Once you see it, it's hard to unsee. Tasks that are objective, fast to check, and cheap to score are exactly the ones RL tears through. That's why benchmarks fall so quickly. They're not just hard problems, they're verifiable problems. Almost by construction.
+            </p>
+
+            <p>
+                RLVR shines in domains that look like this: the reasoning is self-contained, the rules are stable, and the outside world doesn't interfere. Math problems, formal logic, competitive programming. An AIME problem has one right answer. A verifier checks equality. A coding problem either passes the tests or it doesn't. In that narrow slice of the world, RLVR is genuinely useful. You get clean feedback at scale, and learning works.
+            </p>
+
+            <p>
+                The trouble starts when you step outside that slice. The tasks we actually want agents to handle are almost the opposite: they're the ones where verification is the hard part. Sometimes it's harder to check an answer than to produce one. Fact-checking an essay. Validating a scientific claim. Deciding whether a business judgment was sound. <a href="https://en.wikipedia.org/wiki/Brandolini%27s_law">Brandolini's Law</a> applies here: it takes far more effort to refute something than to generate it.
+                And in many real tasks, verification isn't just expensive, it's not even well-defined. Did the agent buy a good gift? Did it negotiate the right vendor contract? Did it make the right call when the information was incomplete? There's no answer key for these. They're contextual, subjective, and often only clear in hindsight.
+            </p>
+
+            <p>
+                This is the real reason RLVR looks so strong on benchmarks. The benchmarks are chosen to fit inside the model. They avoid long horizons, unstable environments, ambiguous goals, and real world interaction. That works fine for puzzles, but it becomes a fatal limitation the moment you try to build agents for the world we actually live in.
+            </p>
+
+            <hr>
+
+            <h2>3. Verifiable ≠ Learnable: The Credit Assignment Problem</h2>
+
+            <p>
+                A common confusion in RLVR discourse is the belief that correct rewards are therefore useful rewards. Reality check – "They are not".
+            </p>
+
+            <p>
+                A reward can be perfectly accurate and still be information-theoretically insufficient to train a policy. The core issue is credit assignment.
+            </p>
+
+            <p>
+                Policy-gradient and trajectory-sampling methods like <strong>PPO</strong>, <strong>GRPO</strong>, <strong>REINFORCE</strong>, and related variants attempt to assign responsibility for an outcome across a sequence of actions. When rewards are delayed, sparse, or global, the signal-to-noise ratio collapses.
+            </p>
+
+            <p>This has nothing to do with whether the reward is true.</p>
+
+            <p>
+                A single scalar at the end of a long trajectory does not explain which decisions mattered, why they mattered, or how to change them. This is why RL variance explodes with horizon, why sample complexity scales poorly, and why perfect verifiers do not magically make RL efficient.
+            </p>
+
+            <p><strong>RLVR improves reward accuracy. It does not improve reward bandwidth.</strong></p>
+
+            <p>To put it simply: accuracy tells you whether the signal is true, but bandwidth tells you how much the signal teaches you about what to do differently. A binary pass/fail at the end of a 50-step trajectory is perfectly accurate and nearly useless for learning because it carries almost no information about which of those 50 steps should change. Verification is not teaching.</p>
+
+            <p>This isn't just intuition, it's mathematics. The noise in assigning blame grows quadratically with the number of steps: a 50-step task isn't 50x harder to debug than a 1-step task, it's closer to 2,500x harder.</p>
+
+            <p class="example-label">Example: The Gordon Ramsay problem</p>
+            <div class="example-box">
+                <p>Picture Gordon Ramsay judging your 50-step wedding cake. You sifted the flour, creamed the butter, separated the eggs, folded the batter, calibrated the oven, timed the layers, tempered the chocolate, whipped the frosting. He takes one bite and screams "TOO DRY!"</p>
+                <p>You know he's right, and the verification is perfect. But which of your 50 steps caused it? Was it over-mixing at step 12? Wrong oven temperature at step 23? Not enough eggs at step 7? Each step is a suspect, and the verdict tells you nothing about the crime.</p>
+                <p>RLVR gives you an infallible Gordon Ramsay. It doesn't give you a cooking instructor who watches you over-mix and says "stop" before the damage is done.</p>
+            </div>
+
+            <hr>
+
+            <h2>4. Outcome-Level Rewards are Poor</h2>
+
+            <p>
+                RLVR was a genuine advance for the right class of problems. Math competition problems, code synthesis with unit tests, formal proofs, games with win conditions these share a common structure: relatively short horizons, dense intermediate feedback, and outcomes that correlate tightly with the quality of reasoning. When the gap between decision and outcome is narrow, a binary signal at the end still carries usable information. Verification works because credit assignment is tractable.
+            </p>
+
+            <p>
+                The problem is that we've taken a technique that works for constrained, verifiable domains and treated it as a general recipe for agent learning. It isn't. The limitations aren't incidental, they're structural.
+            </p>
+
+            <p>
+                In long horizon tasks, learning comes primarily from mistakes, not success. A successful trajectory shows one path that worked. A failed trajectory encodes many constraints about what doesn't. Dead ends prune search spaces. Instability reveals system limits. Counterexamples dominate program synthesis. Error correction matters more than repetition. Success teaches you one way forward. Failure teaches you the shape of the wall.
+            </p>
+
+            <p>
+                Outcome-level rewards erase that shape. A single terminal pass/fail contains almost no information about the decisions that produced it, the mutual information between a one-bit outcome and any intermediate action in a long trajectory is tiny. Success compresses fifty steps into one bit. Failure compresses many qualitatively different mistakes into the same zero. Near-misses and catastrophes look identical. A mistake at step 3 and a mistake at step 47 look identical. The internal structure of failure where things went wrong and why is lost. The reward can be perfectly correct and still be a terrible teacher not because it's noisy, but because it doesn't carry enough information to support credit assignment across the horizon.
+            </p>
+
+            <p>
+                The contrast with process supervision makes this concrete. Outcome level supervision yields one scalar per episode. Step level supervision yields orders of magnitude more signal and preserves causal structure. This is why process supervised reward models outperform outcome supervised ones on reasoning tasks; they address credit assignment directly by retaining information about failure.
+            </p>
+
+            <p>RLVR is a cleaner signal, but a weaker one.</p>
+
+            <hr>
+
+            <h2>5. Why Policy-Gradient RL Is the Wrong Tool, Even with Perfect Rewards</h2>
+
+            <p>
+                To be precise, the critique here targets policy-gradient, trajectory-sampling reinforcement learning as commonly deployed today and not all of RL. These methods are already known to suffer from structural weaknesses: high-variance gradients, poor scaling with horizon and dimensionality, extreme sensitivity to reward shaping, instability across seeds, and heavy dependence on interaction data.
+            </p>
+
+            <p>RLVR doesn't fix these problems. It exposes something more fundamental.</p>
+
+            <h3>Actor–Critic Was the Actual Breakthrough</h3>
+
+            <p>
+                Value-free methods like <strong>REINFORCE</strong> have always existed. They are conceptually clean and mathematically elegant. They are also not what drove the last decade of progress in reinforcement learning. Every major practical breakthrough came from actor–critic methods, for one reason: value functions make long horizon learning tractable. The critic is not an optimization trick or a variance reduction hack. It is the agent's internal model of progress.
+            </p>
+
+            <p>
+                A learned value function evaluates intermediate states before outcomes are known. It tells the agent whether it is drifting toward recovery or collapse, whether a partial trajectory is promising or doomed. It allows the agent to anticipate failure rather than react to it after the fact. Without this internal notion of "how things are going," long horizon credit assignment becomes almost impossible. Remove the critic, and policy gradients collapse into blind sampling hoping that enough rollouts eventually stumble into signal.
+            </p>
+
+            <h3>Why Learning Policy and Value Together Actually Matters</h3>
+
+            <p>Actor–critic works because policy and value co-evolve on real data.</p>
+
+            <p>
+                Every real interaction updates both components simultaneously. The policy learns which actions to take. The value function learns how good the resulting states actually are. Crucially, both are trained on the same trajectories, under the same state distribution, in a tight feedback loop.
+            </p>
+
+            <p>
+                As the policy improves, it visits more informative regions of the state space. As the critic improves, it provides lower-variance, localized learning signals. Each stabilizes the other.
+            </p>
+
+            <p>This coupling is not incidental, it is the core advantage of modern reinforcement learning. Break that loop, and RL loses its edge.</p>
+
+            <h3>What Goes Wrong with GRPO-Style and RLVR-Style Training</h3>
+
+            <p>
+                Methods like GRPO or RLVR explicitly sever this coupling. They replace learned value functions with contrastive comparisons, preference scores, or externally verified outcomes. Learning is driven not by internal estimates of progress, but by relative judgments made after the fact.
+            </p>
+
+            <p>The result is training that is:</p>
+
+            <ul>
+                <li>Disconnected from intermediate state quality</li>
+                <li>Blind to near-misses versus catastrophic failures</li>
+                <li>Dependent on short horizons where outcomes are immediately observable</li>
+            </ul>
+
+            <p>The agent is navigating without a compass.</p>
+
+            <p>
+                These methods work when the task is shallow enough, i.e. short trajectories, dense feedback, cheap mistakes. But that's not because they represent better reinforcement learning. It's because the problem has been simplified enough to tolerate the absence of a critic. LLMs amplify this effect. Their pretrained priors already encode vast amounts of task structure, effectively compressing what looks like a long horizon problem into a short horizon preference nudge. The policy arrives nearly competent; RLVR just steers at the surface. Contrastive rewards appear effective not because they solve credit assignment, but because pretraining already did the heavy lifting. We are not witnessing a breakthrough in reinforcement learning. We are witnessing language models good enough to hide the fact that it's still broken. Just to be clear, RLVR is not fake, but its scope of influence is routinely overstated.
+            </p>
+
+            <blockquote>
+                <p><strong>Value-free methods scale only when pretraining compresses the effective horizon to near zero. RLVR's success isn't a breakthrough in reinforcement learning. It's parasitic on the breakthroughs already baked into the base model.</strong></p>
+            </blockquote>
+
+            <h3>Is This Even Reinforcement Learning?</h3>
+
+            <p>
+                The deeper issue is taxonomic. Much of what gets labeled RLVR is not reinforcement learning in any meaningful sense. The typical pipeline: generate candidate outputs, score them with a verifier, filter to successes, fine-tune on the survivors. This is rejection sampling followed by supervised learning. There is no temporal credit assignment, no policy-gradient optimization over trajectories, no value function guiding exploration. The "RL" in RLVR is often vestigial.
+            </p>
+
+            <p>
+                Some pipelines do use PPO or GRPO. But when researchers ablate the components, the results are humbling. <a href="https://arxiv.org/abs/2504.11343">Dong et al. (2025)</a> found that simple rejection sampling achieves accuracy within a few points of GRPO on math benchmarks. The gains come primarily from filtering, not from policy gradients.
+            </p>
+
+            <p><strong>The gradients are not teaching. The filtering is.</strong></p>
+
+            <h3>RLVR Amplifies; It Does Not Create</h3>
+
+            <p>
+                Does RLVR teach models new reasoning abilities, or does it surface capabilities already present in the base model? Recent work suggests the latter.
+            </p>
+
+            <p>
+                <a href="https://arxiv.org/abs/2504.13837">Yue et al. (2025)</a> compared RLVR-trained models against their base models using pass@k evaluation. The findings are striking: RLVR models outperform at low k, but base models catch up as k increases. At pass@256, the base model solves problems the RLVR model cannot.
+            </p>
+
+            <p>
+                The interpretation: RLVR concentrates probability mass on high-reward outputs, improving sampling efficiency at the cost of exploration. The model becomes better at surfacing what it already knew. It does not learn new strategies. As the authors put it: RLVR-trained models generate reasoning paths already within the base model's output distribution.
+            </p>
+
+            <p><strong>RLVR sharpens the blade. It does not forge a new one.</strong></p>
+
+            <hr>
+
+            <h2>6. Steelmanning the RLVR Argument</h2>
+
+            <p>
+                To steelman the RLVR position: outcome level verifiers dramatically reduce reward noise, eliminate reward model hacking, and enable scalable self-improvement in domains where ground truth exists. In narrow, symbolic domains, this is a real advance.
+            </p>
+
+            <p>
+                The problem is not that RLVR is ineffective. The problem is that its effectiveness is tightly coupled to properties i.e short horizons, stable environments, unambiguous correctness; same qualities that disappear in real world agent tasks.
+            </p>
+
+            <hr>
+
+            <h2>7. The Hard Problem of Building Agent Environments</h2>
+
+            <p>
+                WebArena. OSWorld. WorkArena. BrowserGym. These benchmarks represent serious engineering efforts to evaluate autonomous agents, and they have catalyzed real progress. The field owes them a debt. But building good evaluation environments is genuinely hard for reasons that go beyond engineering effort.
+            </p>
+
+            <h3>Why Researchers Build Simulated Worlds</h3>
+
+            <p>
+                RLVR requires verifiable rewards. Real-world tasks rarely provide them. This creates a dilemma: you cannot train with RLVR on tasks that lack ground truth verification, but those are precisely the tasks you want agents to perform.
+            </p>
+
+            <p>
+                The field's response has been to construct environments where verification is possible. WebShop simulates e-commerce so purchase success can be checked programmatically. OSWorld virtualizes desktop operating systems so file and application states can be inspected. WorkArena rebuilds ServiceNow workflows in a sandboxed replica. BrowserGym wraps web interactions in controllable containers. MiniWoB++ reduces web tasks to simplified, deterministic puzzles.
+            </p>
+
+            <p>
+                This strategy has now extended to enterprise software. Companies are building simulated versions of Salesforce, SAP, Workday entire fake corporate backends where agents can be trained and evaluated without touching production systems. The appeal is obvious: you get reproducibility, scale, and safety. You can run thousands of trajectories without corrupting real databases or annoying real customers. This is a rational research strategy. If you need verifiable rewards to train, you build worlds that provide them. The benchmarks are not arbitrary; they are shaped by RLVR's requirements. But this creates a subtle irony: we build fake worlds because real worlds are too hard to verify, then celebrate progress on the fake worlds as evidence that agents are ready for real ones.
+            </p>
+
+            <h3>What Simulations Cannot Capture</h3>
+
+            <p>Simulated environments are valuable precisely because they simplify reality. But that simplification has costs:</p>
+
+            <p>
+                <strong>Non-stationarity: </strong> Real websites change layouts, update APIs, deprecate features, and redesign workflows. Amazon today is not Amazon six months ago. Simulated environments are frozen snapshots. An agent trained on a static replica has never experienced the world shifting beneath it.
+            </p>
+
+            <p>
+                This raises a deeper question: is the agent learning knowledge about a specific interface, or learning how to act in a class of environments?
+            </p>
+
+            <p class="example-label">Example: Salesforce opportunity management</p>
+            <div class="example-box">
+                <p>Consider an agent trained to manage sales opportunities in Salesforce. In the training environment, moving a deal to the next pipeline stage means clicking a specific "Stage" dropdown, selecting "Proposal/Price Quote," and filling in three required fields: Expected Close Date, Amount, and Probability. The agent learns this sequence and executes it reliably.</p>
+                <p>But Salesforce implementations vary wildly across organizations. Company A uses the standard pipeline with seven stages; Company B has a custom twelve-stage process with different names and validation rules. Company A requires Probability as a manual input; Company B auto-calculates it based on stage and hides the field entirely. Company A runs Lightning Experience; Company B is still on Classic, where the same action requires navigating a completely different page layout. Company C has built a custom "Deal Desk Approval" workflow that triggers when Amount exceeds $50,000, a business rule that exists nowhere in the UI, only in backend automation.</p>
+                <p>The underlying action is the same: advance this opportunity to reflect that we've sent a proposal. But the surface representation is different in every deployment. If the agent's knowledge is entangled, meaning "move to Proposal stage" is bound to a specific DOM element, a specific dropdown value, a specific field layout, then every customer implementation is a distribution shift. The agent isn't learning what it means to advance a deal. It's memorizing click sequences.</p>
+                <p>The knowledge that matters (what actions achieve what business goals) should be invariant to these surface differences. An agent that truly understood opportunity management would recognize that "Proposal/Price Quote," "Quote Sent," and "Pricing Review" are semantically equivalent stages in different orgs, that the required fields are about capturing commitment and forecast accuracy, not about filling in boxes. But nothing in outcome level training encourages that disentanglement. The verifier checks whether the stage field changed. It cannot check whether the agent understood why.</p>
+                <p>Agents trained this way learn to navigate the simulator they trained on, not the space of possible Salesforce instances. And in enterprise software, no two instances are the same.</p>
+            </div>
+
+            <p>
+                <strong>Irreversibility and consequences: </strong> In simulation, mistakes are free. You can reset the environment and try again. In reality, actions have stakes: money is spent, emails are sent, files are deleted, customers are annoyed. Agents trained without consequences never learn caution. They have no representation of "this action is hard to undo" because in their training world, everything was undoable.
+            </p>
+
+            <p class="example-label">Example: Vendor contract negotiation</p>
+            <div class="example-box">
+                <p>Consider the contract example from earlier: an agent sourcing a vendor for a software contract researches options, compares pricing, negotiates terms, flags risks to legal. In simulation, you can verify whether a contract was signed. But suppose the agent locked in unfavorable payment terms, waived a liability clause that legal would have caught, or failed to notice the vendor's financial instability. These aren't binary failures. They're judgment calls that unfold over months. A verifier can check the signature. It cannot check whether the agent understood what it was signing away.</p>
+                <p>Human judgment resists rubrics. Experienced procurement officers develop intuitions about which vendors are bluffing, which contract terms matter in practice, when to push back and when to concede. This knowledge is illegible, living in heuristics, pattern recognition, and contextual awareness that no one has written down. You cannot build a reward function for "negotiated wisely" because no one can fully specify what that means. The simulation either ignores these dimensions or reduces them to crude proxies, and agents trained on proxies learn to optimize proxies.</p>
+            </div>
+
+            <p>
+                <strong>Ambiguity and underspecification: </strong> Benchmarks must define success precisely to enable automated scoring. But real user requests are vague: "find me a good flight" does not specify whether good means cheap, fast, or convenient. "Handle this customer complaint" does not come with a rubric. "Draft a response to this RFP" does not tell you which tradeoffs the company is willing to make. Agents trained on precisely specified tasks never learn to ask clarifying questions, make judgment calls, or navigate genuine ambiguity, because in their training worlds, ambiguity was designed out.
+            </p>
+
+            <p>
+                <strong>Edge cases and the long tail: </strong> Benchmarks are constructed from templates and known task distributions. They cover the common cases well. But real deployment means encountering situations no one anticipated: a website in maintenance mode, a form field that behaves unexpectedly, a user request that doesn't fit any template, a customer who is angry about something outside the agent's scope. The 1% of cases that break agents in production are systematically absent from training, not because benchmark designers are careless, but because you cannot template what you haven't foreseen.
+            </p>
+
+            <p>
+                None of these gaps reflect poorly on benchmark designers. They reflect the inherent difficulty of building environments that are simultaneously verifiable and realistic. The two properties are in tension.
+            </p>
+
+            <h3>The Verification Bottleneck</h3>
+
+            <p>
+                Automated evaluation at scale requires programmatic success conditions. There is no way around this. If you want to run thousands of agent trajectories, you need a function that returns pass or fail. This is not a design flaw; it is a constraint imposed by the need for reproducibility and scale.
+            </p>
+
+            <p>
+                The consequence is selection bias. Benchmarks can only include tasks where success is programmable. Tasks involving subjective judgment, open ended goals, multistakeholder tradeoffs, or context dependent quality are systematically excluded not because benchmark designers ignore them, but because no one knows how to score them automatically.
+            </p>
+
+            <p>
+                The simulated Salesforce can check whether a lead was updated. It cannot check whether the update was right, whether the sales rep would have made the same call, whether the context justified the action, or whether downstream processes will break. Enterprise software is full of actions that are technically valid but contextually wrong. Verification catches syntax. It misses tribal knowledge and process semantics.
+            </p>
+
+            <hr>
+
+            <h2>8. What Actually Scales: Hybrid Systems</h2>
+
+            <p>
+                What scales in practice is not "better RL," but systems that reduce how much RL they need. The most capable systems today are explicitly hybrid. They are built around mechanisms that inject structure, foresight, and reuse, rather than relying on trial-and-error to rediscover them:
+            </p>
+
+            <ul>
+                <li><strong>Predictive modeling over blind exploration: </strong> World models, simulators, and learned dynamics allow systems to reason about consequences without paying the full cost of interaction.</li>
+                <li><strong>Search and planning over pure policy learning: </strong> Deliberation, tree search, and constraint solving handle long horizon structure that policy gradients struggle to internalize.</li>
+                <li><strong>Tool use over internal simulation: </strong> External tools collapse reasoning depth by making computation explicit, inspectable, and correctable.</li>
+                <li><strong>Memory and retrieval over monolithic policies: </strong> Experience is reused via retrieval and episodic memory, not slowly distilled into weights through fragile gradients.</li>
+                <li><strong>Offline learning from real trajectories that include failures: </strong> Systems learn from curated, high-signal data, where mistakes are informative rather than catastrophic.</li>
+            </ul>
+
+            <p>
+                RLVR is useful as a scalpel: for alignment, calibration, and local preference shaping. It is not a backbone for acquiring long horizon competence. There's a lot of software engineering left to be done with existing agentic architectures and LLMs that exist today to crack long horizon tasks.
+            </p>
+
+            <hr>
+
+            <h2>Conclusion</h2>
+
+            <p>
+                RLVR works not because it solves the hardest problems in learning, but because it carefully sidesteps them. It shines in settings where correctness is easy to verify, environments are stable, and tasks are short and self-contained. In those cases, verifiable rewards are a real and practical advantage. But that is not where intelligence is forged. Real intelligence emerges in messy regimes where feedback is delayed or incomplete, where the world changes under you, where progress is incremental, and where failure carries structure and meaning. Those are precisely the settings where RLVR runs out of road. Policy-gradient reinforcement learning does not scale gracefully into that territory. And training that focuses only on final outcomes quietly throws away the most valuable learning signal we have: how things went wrong, how close we were to success, and which constraints mattered along the way. If we care about building systems that genuinely learn and not just systems that look good under clean evaluation. We have to stop optimizing away the hard parts and start learning from them.
+            </p>
+
+            <h3>What would falsify this argument?</h3>
+
+            <p>
+                It would be weakened by evidence that long horizon agents can reliably learn from terminal, verifiable rewards alone without heavy imitation, search, process supervision, or auxiliary signals and still acquire stable intermediate representations and recoverable failure boundaries across non-stationary environments. No such evidence exists at scale. That absence is telling: extracting rich learning signals from sparse outcome level rewards is fundamentally hard. RLVR belongs in the toolbox, not at the center of agent design.
+            </p>
+
+            <blockquote>
+                <p><strong>The myth of RLVR is the belief that correctness is the bottleneck. It isn't. The real bottleneck is everything that happens when correctness cannot be verified and everything we fail to learn when failure is thrown away.</strong></p>
+            </blockquote>
+
+            <footer class="article-footer">
+                <p>Insights on reinforcement learning and the path to general-purpose AI agents.</p>
+            </footer>
+        </article>
+    </main>
+</body>
+</html>
