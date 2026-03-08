@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentDiff: git blame for vibe coding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #fcfcfc;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #555;
+            --color-text-muted: #888;
+            --color-accent: #2563eb;
+            --color-accent-hover: #1d4ed8;
+            --color-border: #e5e5e5;
+            --color-code-bg: #f5f5f5;
+            --color-blockquote-border: #2563eb;
+            --color-blockquote-bg: #f8fafc;
+            --max-width: 1400px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header / Navigation */
+        .site-header {
+            padding: 40px 24px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        .site-header a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .site-header a:hover {
+            color: var(--color-text);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 24px 100px;
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .article-header h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .article-subtitle {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .article-meta {
+            margin-top: 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .article-meta .author {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Typography */
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        h2 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 2.5em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 2em;
+            margin-bottom: 0.6em;
+            line-height: 1.4;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            margin: 2em 0;
+            padding: 1.25em 1.5em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--color-text);
+        }
+
+        blockquote p strong {
+            font-weight: 700;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+            font-size: 0.88em;
+            background: var(--color-code-bg);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: #c7254e;
+        }
+
+        pre {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 1.25em 1.5em;
+            overflow-x: auto;
+            margin: 1.75em 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d4d4d4;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .code-keyword { color: #569cd6; }
+        .code-function { color: #dcdcaa; }
+        .code-operator { color: #d4d4d4; }
+        .code-value { color: #b5cea8; }
+        .code-comment { color: #6a9955; }
+        .code-string { color: #ce9178; }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+            padding-left: 0.25em;
+        }
+
+        li::marker {
+            color: var(--color-text-muted);
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: 3em 0;
+        }
+
+        /* Staircase progression */
+        .staircase {
+            margin: 2.5em 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.9rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .stair {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 0;
+        }
+
+        .stair-level {
+            flex-shrink: 0;
+            height: 1px;
+            background: var(--color-border);
+        }
+
+        .stair:nth-child(1) .stair-level { width: 0; }
+        .stair:nth-child(2) .stair-level { width: 40px; }
+        .stair:nth-child(3) .stair-level { width: 80px; }
+
+        .stair-content {
+            display: flex;
+            align-items: baseline;
+            gap: 10px;
+        }
+
+        .stair-cmd code {
+            font-size: 0.88em;
+        }
+
+        .stair-arrow {
+            color: var(--color-text-muted);
+            font-size: 0.8rem;
+        }
+
+        .stair-desc {
+            color: var(--color-text-secondary);
+        }
+
+        .stair:nth-child(1), .stair:nth-child(2) {
+            color: var(--color-text-muted);
+        }
+
+        .stair:nth-child(1) .stair-desc,
+        .stair:nth-child(2) .stair-desc {
+            color: var(--color-text-muted);
+        }
+
+        .stair.stair-highlight .stair-content {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .stair.stair-highlight .stair-desc {
+            color: var(--color-text);
+        }
+
+        .stair.stair-highlight .stair-cmd code {
+            color: var(--color-text);
+            background: var(--color-code-bg);
+        }
+
+        /* Hero terminal */
+        .hero-terminal {
+            background: #1e1e1e;
+            border-radius: 8px;
+            margin: 0 0 2.5em;
+            overflow: hidden;
+        }
+
+        .hero-terminal-bar {
+            background: #2d2d2d;
+            padding: 8px 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #555;
+        }
+
+        .hero-terminal-dot:nth-child(1) { background: #ff5f57; }
+        .hero-terminal-dot:nth-child(2) { background: #febc2e; }
+        .hero-terminal-dot:nth-child(3) { background: #28c840; }
+
+        .hero-terminal pre {
+            margin: 0;
+            padding: 1.25em 1.5em;
+            border-radius: 0;
+        }
+
+        .article-header h1 code {
+            color: inherit;
+            background: none;
+            padding: 0;
+            font-size: 0.85em;
+        }
+
+        /* Architecture diagram */
+        .arch-diagram {
+            margin: 2em 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            overflow-x: auto;
+        }
+
+        .arch-flow {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+            min-width: 700px;
+        }
+
+        .arch-node {
+            flex: 0 0 auto;
+            border: 1.5px solid #d0d0d0;
+            border-radius: 6px;
+            padding: 14px 16px;
+            background: #fff;
+            min-width: 130px;
+        }
+
+        .arch-node.daemon {
+            border-color: var(--color-text);
+            background: #f9f9f9;
+        }
+
+        .arch-node-label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            color: var(--color-text);
+        }
+
+        .arch-node-detail {
+            color: var(--color-text-muted);
+            line-height: 1.5;
+            font-size: 0.78rem;
+        }
+
+        .arch-node-detail code {
+            font-size: 0.8em;
+            padding: 0.1em 0.3em;
+            color: var(--color-text-secondary);
+        }
+
+        .arch-arrow {
+            flex: 0 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            min-height: 60px;
+        }
+
+        .arch-arrow-line {
+            color: #bbb;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+
+        .arch-arrow-label {
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+            white-space: nowrap;
+            margin-top: 2px;
+        }
+
+        /* Vertical section below diagram */
+        .arch-below {
+            display: flex;
+            margin-top: 0;
+            min-width: 700px;
+        }
+
+        .arch-below-spacer {
+            flex: 0 0 auto;
+        }
+
+        .arch-below-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .arch-vert-arrow {
+            color: #bbb;
+            font-size: 1rem;
+            line-height: 1;
+            padding: 4px 0;
+        }
+
+        .arch-outputs {
+            display: flex;
+            gap: 12px;
+        }
+
+        .arch-output-node {
+            border: 1.5px dashed #d0d0d0;
+            border-radius: 6px;
+            padding: 10px 14px;
+            background: #fff;
+        }
+
+        .arch-output-node .arch-node-label {
+            font-size: 0.8rem;
+            margin-bottom: 2px;
+        }
+
+        @media (max-width: 768px) {
+            .arch-flow, .arch-below {
+                min-width: 0;
+            }
+            .arch-diagram {
+                font-size: 0.75rem;
+            }
+            .arch-node {
+                padding: 10px 12px;
+                min-width: 100px;
+            }
+        }
+
+        /* Footer */
+        .article-footer {
+            margin-top: 4em;
+            padding-top: 2em;
+            border-top: 1px solid var(--color-border);
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            html {
+                font-size: 17px;
+            }
+
+            .article-header h1 {
+                font-size: 1.9rem;
+            }
+
+            h2 {
+                font-size: 1.35rem;
+            }
+
+            .article-container {
+                padding: 16px 20px 80px;
+            }
+
+            .site-header {
+                padding: 24px 20px;
+            }
+
+        }
+
+        @media (min-width: 1800px) {
+            .article-container {
+                max-width: 1600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="site-header">
+        <a href="index.html">&larr; Back to blog</a>
+    </header>
+
+    <main class="article-container">
+        <header class="article-header">
+            <h1>AgentDiff: <code>git blame</code> for vibe coding</h1>
+            <p class="article-subtitle">When an AI writes your code, git can tell you what changed, but not why.</p>
+            <p class="article-meta"><span class="author">Sunil Mallya + Claude Code</span> &middot; March 2026</p>
+        </header>
+
+        <article>
+            <div class="hero-terminal">
+                <div class="hero-terminal-bar">
+                    <span class="hero-terminal-dot"></span>
+                    <span class="hero-terminal-dot"></span>
+                    <span class="hero-terminal-dot"></span>
+                </div>
+<pre><code>$ agentdiff blame src/auth.py:17 --history
+
+  17 | payload = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=["HS256"])
+
+     <span class="code-keyword">v2 (latest)</span> <span class="code-comment">-- change #c1a8..., 2m ago</span>
+        <span class="code-string">reasoning: "Pinned algorithms to HS256 to prevent algorithm confusion attacks."</span>
+        diff: <span class="code-comment">- payload = jwt.decode(token, os.environ["SECRET_KEY"])</span>
+              <span class="code-keyword">+ payload = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=["HS256"])</span>
+
+     <span class="code-keyword">v1</span> <span class="code-comment">-- change #a0e1..., 5m ago</span>
+        <span class="code-string">reasoning: "Initial JWT decode without algorithm restriction."</span></code></pre>
+            </div>
+
+            <p>
+                I've shipped more code in the last three months than in the previous year. Not just at work. I've been building side projects I actually use: local VLMs on iPhone, Mac apps, inference optimizations, AI research finder. Claude writes it, I approve it, and it works. That's the problem. It works so well that I stopped questioning it, and somewhere in there I lost track of my own codebase.
+            </p>
+
+            <p>
+                I can read every line of code Claude writes. It's clean, well-structured, legible. And I still have no idea <em>why</em> it looks the way it does. The decisions that shaped my codebase happened inside conversations I've already forgotten. Things move so fast that my brain can't retain the reasoning behind code I approved three days ago. And it's not just me. I started noticing the same thing in my colleagues' code. PRs where the author can't explain the architecture. Reviews where nobody questions the patterns because nobody chose them deliberately. The model's output is transparent. The decisions behind it are invisible.
+            </p>
+
+            <p>
+                Comments are supposed to help. Git is supposed to capture the evolution of code. But when the agent made 40 decisions before you committed, none of that works. Git can't tell you which prompt caused which line, whether the agent stayed on task, or if it even consulted your spec. <code>git blame</code> points at you. But you didn't write it. You approved it.
+            </p>
+
+            <div class="staircase">
+                <div class="stair">
+                    <div class="stair-level"></div>
+                    <div class="stair-content">
+                        <span class="stair-cmd"><code>git diff</code></span>
+                        <span class="stair-arrow">&rarr;</span>
+                        <span class="stair-desc">what changed</span>
+                    </div>
+                </div>
+                <div class="stair">
+                    <div class="stair-level"></div>
+                    <div class="stair-content">
+                        <span class="stair-cmd"><code>git blame</code></span>
+                        <span class="stair-arrow">&rarr;</span>
+                        <span class="stair-desc">who changed it</span>
+                    </div>
+                </div>
+                <div class="stair stair-highlight">
+                    <div class="stair-level"></div>
+                    <div class="stair-content">
+                        <span class="stair-cmd"><code>agentdiff blame</code></span>
+                        <span class="stair-arrow">&rarr;</span>
+                        <span class="stair-desc">why the agent changed it</span>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                This is what's actually happening. The agent makes dozens of decisions it never tells you about. JWT over sessions, bcrypt over argon2, environment variables over a config file. You didn't ask for any of those choices. You didn't evaluate the tradeoffs. But they're in your codebase now, and six months from now a new developer will assume a human made them deliberately. They'll build on those assumptions. These are your codebase's <strong>accidental architecture decisions</strong>: defaults a model picked in 15 seconds that become load-bearing walls nobody knows how to move.
+            </p>
+
+            <p>
+                Meanwhile the agent is touching things you didn't ask it to touch. You want one feature and it also refactors a module, updates three test files, changes an import convention. Some of that is helpful. Some of it introduces bugs you won't discover for days. You can't tell the difference because the diff was 400 lines and you skimmed it.
+            </p>
+
+            <p>
+                And the link between what you wanted and what got built is already gone. You had a spec. You wrote a prompt. The agent wrote code. That chain (spec &rarr; prompt &rarr; code) exists in your memory for about 20 minutes.
+            </p>
+
+            <p>
+                We built <strong><a href="https://github.com/sunilmallya/agentdiff">AgentDiff</a></strong> to capture the missing context. It records every decision your coding agent makes: the prompt that triggered it, why it wrote the code that way, and which requirement it maps to. Point at any line. See the full story.
+            </p>
+
+<pre><code>pip install agentdiff</code></pre>
+
+            <hr>
+
+            <h2>Simple to use, just a single command setup</h2>
+
+<pre><code><span class="code-keyword">cd</span> my-project
+agentdiff init          <span class="code-comment"># registers hooks, starts daemon</span>
+<span class="code-comment"># ... code with Claude Code as usual ...</span>
+agentdiff blame src/auth.py   <span class="code-comment"># see what the agent decided</span></code></pre>
+
+<pre><code>$ agentdiff blame src/auth.py
+
+     1 | from flask import request, jsonify
+     2 | import jwt, os
+       <span class="code-comment">-- human (no agent change recorded)</span>
+
+     4 | def login(email, password):
+     5 |     user = db.users.find_one({"email": email})
+     6 |     if not user or not check_password(password, user["hash"]):
+     7 |         return jsonify({"error": "Invalid credentials"}), 401
+     8 |     token = jwt.encode({"user_id": str(user["_id"])}, os.environ["SECRET_KEY"])
+     9 |     return jsonify({"token": token})
+       <span class="code-comment">-- agent / a1f3 / 5m ago (v1, L4-9)</span>
+          <span class="code-string">prompt: "add login endpoint with JWT"</span>
+          <span class="code-string">reasoning: "Implemented email/password login that returns a signed JWT.
+                      Uses bcrypt hash check and reads SECRET_KEY from env."</span>
+
+    11 | def require_auth(f):
+    12 |     def wrapper(*args, **kwargs):
+    13 |         token = request.headers.get("Authorization", "").replace("Bearer ", "")
+    ...
+    22 |     return wrapper
+       <span class="code-comment">-- agent / a1f3 / 2m ago (v2, L11-22)</span>
+          <span class="code-string">prompt: "add auth middleware to protect routes"</span>
+          <span class="code-string">reasoning: "Added decorator that extracts and validates JWT from the
+                      Authorization header. Attaches user_id to request context
+                      so route handlers can access the authenticated user."</span>
+          <span class="code-keyword">spec: SPEC.md -> ## Authentication</span></code></pre>
+
+            <p>
+                Every line-range shows: who wrote it (human or agent), which prompt caused it, what the agent was thinking, and which section of your spec it maps to.
+            </p>
+
+            <p>
+                The agent silently hardened your JWT decode against algorithm confusion attacks. Good decision, but this is exactly the kind of accidental architecture that accumulates. Without a record, six months from now someone will see <code>algorithms=["HS256"]</code> and assume it was a deliberate security review. It wasn't. It was a model default. And if it's ever wrong, nobody will know to question it.
+            </p>
+
+            <hr>
+
+            <h2>How does it work?</h2>
+
+            <div class="arch-diagram">
+                <div class="arch-flow">
+                    <div class="arch-node">
+                        <div class="arch-node-label">Claude Code</div>
+                        <div class="arch-node-detail">
+                            agent makes<br>
+                            <code>Write</code> / <code>Edit</code><br>
+                            tool calls
+                        </div>
+                    </div>
+                    <div class="arch-arrow">
+                        <div class="arch-arrow-line">&rarr;</div>
+                        <div class="arch-arrow-label">fires event</div>
+                    </div>
+                    <div class="arch-node">
+                        <div class="arch-node-label">Hooks</div>
+                        <div class="arch-node-detail">
+                            <code>PostToolUse</code><br>
+                            <code>SubagentStart</code><br>
+                            <code>Stop</code>
+                        </div>
+                    </div>
+                    <div class="arch-arrow">
+                        <div class="arch-arrow-line">&rarr;</div>
+                        <div class="arch-arrow-label">unix socket</div>
+                    </div>
+                    <div class="arch-node daemon">
+                        <div class="arch-node-label">AgentDiff Daemon</div>
+                        <div class="arch-node-detail">
+                            extracts prompt,<br>
+                            active task, spec<br>
+                            match, file diffs
+                        </div>
+                    </div>
+                    <div class="arch-arrow">
+                        <div class="arch-arrow-line">&rarr;</div>
+                        <div class="arch-arrow-label">append</div>
+                    </div>
+                    <div class="arch-node">
+                        <div class="arch-node-label">changes.jsonl</div>
+                        <div class="arch-node-detail">
+                            one line per change,<br>
+                            per session file,<br>
+                            append-only
+                        </div>
+                    </div>
+                </div>
+                <div class="arch-below">
+                    <!-- spacer to align under the daemon node -->
+                    <div class="arch-below-spacer" style="width: 310px;"></div>
+                    <div class="arch-below-content">
+                        <div class="arch-vert-arrow">&darr; <span style="font-size: 0.75rem; color: #999;">on session end</span></div>
+                        <div class="arch-outputs">
+                            <div class="arch-output-node">
+                                <div class="arch-node-label">Claude Haiku</div>
+                                <div class="arch-node-detail">1 API call per session<br>generates reasoning</div>
+                            </div>
+                            <div class="arch-output-node">
+                                <div class="arch-node-label">git notes</div>
+                                <div class="arch-node-detail">attached on commit<br>for PRs &amp; CI</div>
+                            </div>
+                            <div class="arch-output-node">
+                                <div class="arch-node-label">agentdiff blame</div>
+                                <div class="arch-node-detail">reads live change log<br>works before commit</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <p>
+                Watching the filesystem only tells you <em>what</em> changed, not <em>why</em>. So instead, AgentDiff intercepts the agent's tool calls directly. Claude Code has a <a href="https://docs.anthropic.com/en/docs/claude-code/hooks">hooks system</a> that fires lifecycle events on every <code>Write</code>, <code>Edit</code>, subagent start/stop, and session end. AgentDiff registers hooks on these events and pipes the event JSON to a local daemon over a unix socket. Under 5ms per hook, fail-open, invisible during coding.
+            </p>
+
+            <p>
+                The daemon records each change as a JSON line with everything git would lose: the prompt that caused it, the active task, which spec heading it maps to. One line per change, append-only, no database. At session end, a single API call to Claude Haiku generates concise reasoning summaries for all changes at once. On commit, git hooks attach these as git notes for PR descriptions and CI checks. And because <code>agentdiff blame</code> reads the live change log, it works before you commit.
+            </p>
+
+            <hr>
+
+            <h2>Why this is possible now</h2>
+
+            <p>
+                If you've used Claude Code over the past few months, you've probably noticed something: the agent's behavior has become remarkably structured. It doesn't just generate code in a stream anymore. It thinks, plans, breaks work into subtasks, calls specific tools (<code>Write</code>, <code>Edit</code>, <code>Read</code>, <code>Bash</code>), completes a subtask, and moves to the next one. There's a predictable execution loop: receive prompt, plan approach, execute tool calls, verify, report back.
+            </p>
+
+            <p>
+                That structure is what makes AgentDiff possible. Two years ago, AI code generation meant pasting output from a chat window. No tools, no events, no lifecycle. You'd have to diff files and guess which prompt produced which change. There was nothing to hook into.
+            </p>
+
+            <p>
+                Now Claude Code fires typed events for every tool invocation: which file was written, what was edited, when a subtask started and stopped. The agent's execution loop is <em>observable</em>. AgentDiff doesn't guess from file diffs. It intercepts the agent's actual operations as they happen, with full context about the prompt, the task, and the intent.
+            </p>
+
+            <p>
+                As coding agents mature, this structured tool-call pattern is becoming universal. AgentDiff is built for Claude Code today, but the architecture generalizes to any agent with observable tool use.
+            </p>
+
+            <hr>
+
+            <h2>Commands</h2>
+
+<pre><code>agentdiff init                           <span class="code-comment"># register hooks, start daemon</span>
+agentdiff teardown                       <span class="code-comment"># clean removal</span>
+
+agentdiff blame &lt;file&gt;                   <span class="code-comment"># prompt + reasoning per line</span>
+agentdiff blame &lt;file&gt;:&lt;line&gt; --history  <span class="code-comment"># version history for one line</span>
+agentdiff blame &lt;file&gt; --json            <span class="code-comment"># JSON output for scripts</span>
+
+agentdiff log                            <span class="code-comment"># all changes, newest first</span>
+agentdiff log --session=&lt;id&gt;             <span class="code-comment"># filter by session</span>
+agentdiff log --file=&lt;path&gt;              <span class="code-comment"># filter by file</span>
+
+agentdiff doctor                         <span class="code-comment"># check daemon, hooks, config</span>
+agentdiff relink                         <span class="code-comment"># re-match changes to spec headings</span></code></pre>
+
+            <p>
+                <strong>Spec linking</strong> is optional. Drop a <code>spec_file: SPEC.md</code> in <code>.agentdiff/config.yaml</code> and AgentDiff will match agent changes to your spec headings automatically. Run <code>agentdiff relink</code> after updating spec headings.
+            </p>
+
+            <hr>
+
+            <h2>Get started</h2>
+
+<pre><code>pip install agentdiff
+<span class="code-keyword">cd</span> your-project
+agentdiff init</code></pre>
+
+            <p>
+                Start coding with Claude Code. Every change is tracked automatically. When you're done, run <code>agentdiff blame</code> on any file and see what your agent decided without telling you.
+            </p>
+
+            <p>
+                Git gave us version control for code written by humans. AgentDiff adds the layer that's been missing: version control for the <em>decisions</em> made by agents. As more code is written by AI instead of by hand, understanding <em>why</em> code exists becomes as important as understanding <em>what</em> it does.
+            </p>
+
+            <p>AgentDiff is open source. MIT license. Python 3.9+.</p>
+
+            <p><strong><a href="https://github.com/sunilmallya/agentdiff">GitHub</a></strong></p>
+
+            <footer class="article-footer">
+                <p>AgentDiff: understanding the decisions your coding agent makes.</p>
+            </footer>
+        </article>
+    </main>
+</body>
+</html>
