@@ -577,10 +577,10 @@
             </p>
 
             <p>
-                We built <strong><a href="https://github.com/sunilmallya/agentdiff">AgentDiff</a></strong> to capture the missing context. It records every decision your coding agent makes: the prompt that triggered it, why it wrote the code that way, and which requirement it maps to. Point at any line. See the full story.
+                I built <strong><a href="https://github.com/sunilmallya/agentdiff">AgentDiff</a></strong> to capture the missing context. It records every decision your coding agent makes: the prompt that triggered it, why it wrote the code that way, and which requirement it maps to. Point at any line. See the full story. One command to install, one to init, and you're seeing agent reasoning on every line.
             </p>
 
-<pre><code>pip install agentdiff</code></pre>
+<pre><code>curl -fsSL https://raw.githubusercontent.com/sunilmallya/agentdiff/main/install.sh | sh</code></pre>
 
             <hr>
 
@@ -739,11 +739,16 @@ agentdiff teardown                       <span class="code-comment"># clean remo
 
 agentdiff blame &lt;file&gt;                   <span class="code-comment"># prompt + reasoning per line</span>
 agentdiff blame &lt;file&gt;:&lt;line&gt; --history  <span class="code-comment"># version history for one line</span>
+agentdiff blame &lt;file&gt; --color           <span class="code-comment"># color-coded by prompt</span>
 agentdiff blame &lt;file&gt; --json            <span class="code-comment"># JSON output for scripts</span>
 
 agentdiff log                            <span class="code-comment"># all changes, newest first</span>
 agentdiff log --session=&lt;id&gt;             <span class="code-comment"># filter by session</span>
 agentdiff log --file=&lt;path&gt;              <span class="code-comment"># filter by file</span>
+
+agentdiff tour                           <span class="code-comment"># generate VS Code CodeTour walkthrough</span>
+agentdiff tour --session=&lt;id&gt;            <span class="code-comment"># tour a specific session</span>
+agentdiff tour --file=&lt;path&gt;             <span class="code-comment"># tour changes to one file</span>
 
 agentdiff doctor                         <span class="code-comment"># check daemon, hooks, config</span>
 agentdiff relink                         <span class="code-comment"># re-match changes to spec headings</span></code></pre>
@@ -754,10 +759,43 @@ agentdiff relink                         <span class="code-comment"># re-match c
 
             <hr>
 
+            <h2>VS Code CodeTour Integration</h2>
+
+            <p>
+                Instead of building a custom VS Code extension, AgentDiff generates standard <a href="https://marketplace.visualstudio.com/items?itemName=vsls-liveshare.codetour">CodeTour</a> files — a popular VS Code plugin for code walkthroughs. <code>agentdiff tour</code> produces a <code>.tour</code> file that lets you step through every agent change directly in VS Code, with the prompt, reasoning, and diff shown inline at each stop.
+            </p>
+
+            <p>
+                <img src="images/agentdiff-vscode.png" alt="AgentDiff CodeTour in VS Code showing step-by-step agent reasoning" style="width: 100%; border-radius: 8px; border: 1px solid var(--color-border); margin: 1em 0;">
+            </p>
+
+            <p>
+                Install the CodeTour extension, generate a tour from your session, and open the CodeTour panel in VS Code's explorer sidebar. Each step jumps to the exact file and line, showing what the agent did and why.
+            </p>
+
+<pre><code>agentdiff tour                     <span class="code-comment"># tour all changes</span>
+agentdiff tour --session=&lt;id&gt;      <span class="code-comment"># tour a specific session</span>
+agentdiff tour --file=<span class="code-string">"*.py"</span>       <span class="code-comment"># tour changes to Python files</span></code></pre>
+
+            <hr>
+
             <h2>Get started</h2>
 
-<pre><code>pip install agentdiff
-<span class="code-keyword">cd</span> your-project
+            <p>
+                AgentDiff is <strong>language agnostic</strong> — it tracks changes to any file type (Python, TypeScript, Rust, Go, etc.). The tool itself is written in Python for readability, but it works with any codebase.
+            </p>
+
+            <p>Install globally so you can use it in any project:</p>
+
+<pre><code>curl -fsSL https://raw.githubusercontent.com/sunilmallya/agentdiff/main/install.sh | sh</code></pre>
+
+            <p>Or with pip:</p>
+
+<pre><code>pip install agentdiff</code></pre>
+
+            <p>Then initialize in any project directory:</p>
+
+<pre><code><span class="code-keyword">cd</span> your-project
 agentdiff init</code></pre>
 
             <p>
