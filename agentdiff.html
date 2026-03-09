@@ -521,24 +521,9 @@
         </header>
 
         <article>
-            <div class="hero-terminal">
-                <div class="hero-terminal-bar">
-                    <span class="hero-terminal-dot"></span>
-                    <span class="hero-terminal-dot"></span>
-                    <span class="hero-terminal-dot"></span>
-                </div>
-<pre><code>$ agentdiff blame src/auth.py:17 --history
-
-  17 | payload = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=["HS256"])
-
-     <span class="code-keyword">v2 (latest)</span> <span class="code-comment">-- change #c1a8..., 2m ago</span>
-        <span class="code-string">reasoning: "Pinned algorithms to HS256 to prevent algorithm confusion attacks."</span>
-        diff: <span class="code-comment">- payload = jwt.decode(token, os.environ["SECRET_KEY"])</span>
-              <span class="code-keyword">+ payload = jwt.decode(token, os.environ["SECRET_KEY"], algorithms=["HS256"])</span>
-
-     <span class="code-keyword">v1</span> <span class="code-comment">-- change #a0e1..., 5m ago</span>
-        <span class="code-string">reasoning: "Initial JWT decode without algorithm restriction."</span></code></pre>
-            </div>
+            <p>
+                <img src="images/agentdiff-history.png" alt="agentdiff blame src/auth.py:17 --history showing version history with reasoning" style="width: 100%; border-radius: 8px;">
+            </p>
 
             <p>
                 I've shipped more code in the last three months than in the previous year. Not just at work. I've been building side projects I actually use: local VLMs on iPhone, Mac apps, inference optimizations, AI research finder. Claude writes it, I approve it, and it works. That's the problem. It works so well that I stopped questioning it, and somewhere in there I lost track of my own codebase.
