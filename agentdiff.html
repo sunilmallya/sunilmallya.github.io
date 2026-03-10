@@ -522,10 +522,20 @@
 
         <article>
             <p>
+                <strong><a href="https://github.com/sunilmallya/agentdiff">AgentDiff</a></strong> is a CLI tool that hooks into Claude Code and tracks every file change with its prompt, reasoning, and task context. Think <code>git blame</code>, but for the <em>why</em> behind AI-generated code. Works with any language, any codebase.
+            </p>
+
+            <p>
+                Point at any line and see who wrote it (agent or human), the prompt that caused it, and the reasoning behind the change. Agent metadata is automatically attached to commits as git notes, so PR reviewers get the full context without leaving <code>git log</code>.
+            </p>
+
+            <p>
                 <img src="images/agentdiff-history.png" alt="agentdiff blame src/auth.py:17 --history showing version history with reasoning" style="width: 100%; border-radius: 8px;">
             </p>
 
             <blockquote><p><strong>LLMs show their reasoning. Agent-written codebases are still black boxes.</strong></p></blockquote>
+
+            <h2>Why I built this</h2>
 
             <p>
                 I've shipped more code in the last three months than in the previous year. Not just at work. I've been building side projects I actually use: local VLMs on iPhone, Mac apps, inference optimizations, AI research finder. Claude writes it, I approve it, and it works. That's the problem. It works so well that I stopped questioning it, and somewhere in there I lost track of my own codebase.
@@ -578,20 +588,13 @@
                 And the link between what you wanted and what got built is already gone. You had a spec. You wrote a prompt. The agent wrote code. That chain (spec &rarr; prompt &rarr; code) exists in your memory for about 20 minutes.
             </p>
 
-            <p>
-                I built <strong><a href="https://github.com/sunilmallya/agentdiff">AgentDiff</a></strong> to capture the missing context. It records every decision your coding agent makes: the prompt that triggered it, why it wrote the code that way, and which requirement it maps to. Point at any line. See the full story. One command to install, one to init, and you're seeing agent reasoning on every line.
-            </p>
-
-<pre><code>curl -fsSL https://raw.githubusercontent.com/sunilmallya/agentdiff/main/install.sh | sh</code></pre>
-
             <hr>
 
-            <h2>Simple to use, just a single command setup</h2>
+            <h2>Human + Agent Iterations</h2>
 
-<pre><code><span class="code-keyword">cd</span> my-project
-agentdiff init          <span class="code-comment"># registers hooks, starts daemon</span>
-<span class="code-comment"># ... code with Claude Code as usual ...</span>
-agentdiff blame src/auth.py   <span class="code-comment"># see what the agent decided</span></code></pre>
+            <p>
+                Real vibe coding is iterative. The agent writes code, you tweak it, the agent refines it. AgentDiff tracks both sides. Every line shows who wrote it (agent or human), the prompt that caused it, the agent's reasoning, and which section of your spec it maps to.
+            </p>
 
 <pre><code>$ agentdiff blame src/auth.py
 
@@ -624,17 +627,15 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
           <span class="code-keyword">spec: SPEC.md -> ## Authentication</span></code></pre>
 
             <p>
-                Every line-range shows: who wrote it (human or agent), which prompt caused it, what the agent was thinking, and which section of your spec it maps to.
-            </p>
-
-            <p>
                 The agent silently hardened your JWT decode against algorithm confusion attacks. Good decision, but this is exactly the kind of accidental architecture that accumulates. Without a record, six months from now someone will see <code>algorithms=["HS256"]</code> and assume it was a deliberate security review. It wasn't. It was a model default. And if it's ever wrong, nobody will know to question it.
             </p>
 
-            <h3>Human + Agent Iterations</h3>
+            <p>
+                Run <code>agentdiff blame &lt;file&gt;:&lt;line&gt; --history</code> on any line to see its full evolution. In the hero example above, line 17 starts as a bare <code>jwt.decode()</code> call (v1), then the agent pins it to HS256 to prevent algorithm confusion attacks (v2). Each version captures the reasoning behind the change. Agent-written lines preserve their prompt and reasoning, and human edits are detected automatically via <code>git diff</code>. Only the lines you actually changed show as human. No attribution is lost.
+            </p>
 
             <p>
-                Real vibe coding is iterative. The agent writes code, you tweak it, the agent refines it. AgentDiff tracks both sides. In the example above, the agent builds the initial code, a human hardens it, and the agent refines further. Each line keeps its correct attribution. Agent-written lines preserve their prompt and reasoning, and human edits are clearly marked. No attribution is lost.
+                When you commit, AgentDiff attaches all of this as <a href="https://git-scm.com/docs/git-notes">git notes</a>. The notes travel with the commit, so PR reviewers see the agent's reasoning directly in <code>git log</code> without any extra tooling. CI pipelines can read the notes to flag commits where the agent worked outside scope or made decisions that weren't in the spec. The context that used to vanish after your coding session now lives permanently in your git history.
             </p>
 
             <hr>
@@ -695,7 +696,7 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
                         <div class="arch-vert-arrow">&darr; <span style="font-size: 0.75rem; color: #999;">on session end</span></div>
                         <div class="arch-outputs">
                             <div class="arch-output-node">
-                                <div class="arch-node-label">Claude Haiku</div>
+                                <div class="arch-node-label">Claude Code</div>
                                 <div class="arch-node-detail">1 API call per session<br>generates reasoning</div>
                             </div>
                             <div class="arch-output-node">
@@ -704,7 +705,7 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
                             </div>
                             <div class="arch-output-node">
                                 <div class="arch-node-label">agentdiff blame</div>
-                                <div class="arch-node-detail">reads live change log<br>works before commit</div>
+                                <div class="arch-node-detail">reads JSONL + <code>git diff</code><br>agent vs human per line<br>works before commit</div>
                             </div>
                         </div>
                     </div>
@@ -716,7 +717,15 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
             </p>
 
             <p>
-                The daemon records each change as a JSON line with everything git would lose: the prompt that caused it, the active task, which spec heading it maps to. One line per change, append-only, no database. At session end, a single API call to Claude Haiku generates concise reasoning summaries for all changes at once. On commit, git hooks attach these as git notes for PR descriptions and CI checks. And because <code>agentdiff blame</code> reads the live change log, it works before you commit. Human edits are detected automatically via <code>git diff</code> — when you modify agent-written code in your editor, only the lines you actually changed show as human. Agent-written lines you didn't touch keep their original attribution.
+                The daemon records each change as a JSON line with everything git would lose: the prompt that caused it, the active task, which spec heading it maps to. One line per change, append-only, no database. At session end, a single API call to Claude Code generates concise reasoning summaries for all changes at once.
+            </p>
+
+            <p>
+                <code>agentdiff blame</code> reads the live change log, so it works before you commit. When you modify agent-written code in your editor, AgentDiff uses <code>git diff</code> to detect which lines you changed. Only those lines show as human. Agent-written lines you didn't touch keep their original attribution.
+            </p>
+
+            <p>
+                On commit, git hooks attach the full change context as <a href="https://git-scm.com/docs/git-notes">git notes</a>. The notes travel with the commit and show up in <code>git log</code>, so PR reviewers see agent reasoning without extra tooling. The chain from uncommitted changes to blame to commit to PR is unbroken.
             </p>
 
             <hr>
@@ -741,12 +750,30 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
 
             <hr>
 
-            <h2>Commands</h2>
+            <h2>Get started</h2>
 
-<pre><code>agentdiff init                           <span class="code-comment"># register hooks, start daemon</span>
-agentdiff teardown                       <span class="code-comment"># clean removal</span>
+            <p>
+                AgentDiff is <strong>language agnostic</strong> — it tracks changes to any file type (Python, TypeScript, Rust, Go, etc.). The tool itself is written in Python for readability, but it works with any codebase.
+            </p>
 
-agentdiff blame &lt;file&gt;                   <span class="code-comment"># prompt + reasoning per line</span>
+            <p>Install globally so you can use it in any project:</p>
+
+<pre><code>curl -fsSL https://raw.githubusercontent.com/sunilmallya/agentdiff/main/install.sh | sh</code></pre>
+
+            <p>Then initialize in any project directory and start coding:</p>
+
+<pre><code><span class="code-keyword">cd</span> my-project
+agentdiff init          <span class="code-comment"># registers hooks, starts daemon</span>
+<span class="code-comment"># ... code with Claude Code as usual ...</span>
+agentdiff blame src/auth.py   <span class="code-comment"># see what the agent decided</span></code></pre>
+
+            <p>
+                Every change is tracked automatically. When you're done, run <code>agentdiff blame</code> on any file and see what your agent decided without telling you.
+            </p>
+
+            <h3>Commands</h3>
+
+<pre><code>agentdiff blame &lt;file&gt;                   <span class="code-comment"># prompt + reasoning per line</span>
 agentdiff blame &lt;file&gt;:&lt;line&gt; --history  <span class="code-comment"># version history for one line</span>
 agentdiff blame &lt;file&gt; --color           <span class="code-comment"># color-coded by prompt</span>
 agentdiff blame &lt;file&gt; --json            <span class="code-comment"># JSON output for scripts</span>
@@ -766,9 +793,7 @@ agentdiff relink                         <span class="code-comment"># re-match c
                 <strong>Spec linking</strong> is optional. Drop a <code>spec_file: SPEC.md</code> in <code>.agentdiff/config.yaml</code> and AgentDiff will match agent changes to your spec headings automatically. Run <code>agentdiff relink</code> after updating spec headings.
             </p>
 
-            <hr>
-
-            <h2>VS Code CodeTour Integration</h2>
+            <h3>VS Code CodeTour Integration</h3>
 
             <p>
                 Instead of building a custom VS Code extension, AgentDiff generates standard <a href="https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour">CodeTour</a> files — a popular VS Code plugin for code walkthroughs. <code>agentdiff tour</code> produces a <code>.tour</code> file that lets you step through every agent change directly in VS Code, with the prompt, reasoning, and diff shown inline at each stop.
@@ -776,39 +801,6 @@ agentdiff relink                         <span class="code-comment"># re-match c
 
             <p>
                 <img src="images/agentdiff-vscode.png" alt="AgentDiff CodeTour in VS Code showing step-by-step agent reasoning" style="width: 100%; border-radius: 8px; border: 1px solid var(--color-border); margin: 1em 0;">
-            </p>
-
-            <p>
-                Install the CodeTour extension, generate a tour from your session, and open the CodeTour panel in VS Code's explorer sidebar. Each step jumps to the exact file and line, showing what the agent did and why.
-            </p>
-
-<pre><code>agentdiff tour                     <span class="code-comment"># tour all changes</span>
-agentdiff tour --session=&lt;id&gt;      <span class="code-comment"># tour a specific session</span>
-agentdiff tour --file=<span class="code-string">"*.py"</span>       <span class="code-comment"># tour changes to Python files</span></code></pre>
-
-            <hr>
-
-            <h2>Get started</h2>
-
-            <p>
-                AgentDiff is <strong>language agnostic</strong> — it tracks changes to any file type (Python, TypeScript, Rust, Go, etc.). The tool itself is written in Python for readability, but it works with any codebase.
-            </p>
-
-            <p>Install globally so you can use it in any project:</p>
-
-<pre><code>curl -fsSL https://raw.githubusercontent.com/sunilmallya/agentdiff/main/install.sh | sh</code></pre>
-
-            <p>Or with pip:</p>
-
-<pre><code>pip install agentdiff</code></pre>
-
-            <p>Then initialize in any project directory:</p>
-
-<pre><code><span class="code-keyword">cd</span> your-project
-agentdiff init</code></pre>
-
-            <p>
-                Start coding with Claude Code. Every change is tracked automatically. When you're done, run <code>agentdiff blame</code> on any file and see what your agent decided without telling you.
             </p>
 
             <p>
