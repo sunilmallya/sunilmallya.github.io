@@ -595,7 +595,8 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
 
      1 | from flask import request, jsonify
      2 | import jwt, os
-       <span class="code-comment">-- human (no agent change recorded)</span>
+       <span class="code-comment">-- human / uncommitted / 3m ago</span>
+          <span class="code-string">author: Sunil Mallya</span>
 
      4 | def login(email, password):
      5 |     user = db.users.find_one({"email": email})
@@ -604,9 +605,9 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
      8 |     token = jwt.encode({"user_id": str(user["_id"])}, os.environ["SECRET_KEY"])
      9 |     return jsonify({"token": token})
        <span class="code-comment">-- agent / a1f3 / 5m ago (v1, L4-9)</span>
-          <span class="code-string">prompt: "add login endpoint with JWT"</span>
-          <span class="code-string">reasoning: "Implemented email/password login that returns a signed JWT.
-                      Uses bcrypt hash check and reads SECRET_KEY from env."</span>
+          <span class="code-string">user-prompt: "add login endpoint with JWT"</span>
+          <span class="code-string">reasoning:   "Implemented email/password login that returns a signed JWT.
+                        Uses bcrypt hash check and reads SECRET_KEY from env."</span>
 
     11 | def require_auth(f):
     12 |     def wrapper(*args, **kwargs):
@@ -614,10 +615,10 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
     ...
     22 |     return wrapper
        <span class="code-comment">-- agent / a1f3 / 2m ago (v2, L11-22)</span>
-          <span class="code-string">prompt: "add auth middleware to protect routes"</span>
-          <span class="code-string">reasoning: "Added decorator that extracts and validates JWT from the
-                      Authorization header. Attaches user_id to request context
-                      so route handlers can access the authenticated user."</span>
+          <span class="code-string">user-prompt: "add auth middleware to protect routes"</span>
+          <span class="code-string">reasoning:   "Added decorator that extracts and validates JWT from the
+                        Authorization header. Attaches user_id to request context
+                        so route handlers can access the authenticated user."</span>
           <span class="code-keyword">spec: SPEC.md -> ## Authentication</span></code></pre>
 
             <p>
@@ -626,6 +627,12 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
 
             <p>
                 The agent silently hardened your JWT decode against algorithm confusion attacks. Good decision, but this is exactly the kind of accidental architecture that accumulates. Without a record, six months from now someone will see <code>algorithms=["HS256"]</code> and assume it was a deliberate security review. It wasn't. It was a model default. And if it's ever wrong, nobody will know to question it.
+            </p>
+
+            <h3>Human + Agent Iterations</h3>
+
+            <p>
+                Real vibe coding is iterative. The agent writes code, you tweak it, the agent refines it. AgentDiff tracks both sides. In the example above, the agent builds the initial code, a human hardens it, and the agent refines further. Each line keeps its correct attribution. Agent-written lines preserve their prompt and reasoning, and human edits are clearly marked. No attribution is lost.
             </p>
 
             <hr>
@@ -707,7 +714,7 @@ agentdiff blame src/auth.py   <span class="code-comment"># see what the agent de
             </p>
 
             <p>
-                The daemon records each change as a JSON line with everything git would lose: the prompt that caused it, the active task, which spec heading it maps to. One line per change, append-only, no database. At session end, a single API call to Claude Haiku generates concise reasoning summaries for all changes at once. On commit, git hooks attach these as git notes for PR descriptions and CI checks. And because <code>agentdiff blame</code> reads the live change log, it works before you commit.
+                The daemon records each change as a JSON line with everything git would lose: the prompt that caused it, the active task, which spec heading it maps to. One line per change, append-only, no database. At session end, a single API call to Claude Haiku generates concise reasoning summaries for all changes at once. On commit, git hooks attach these as git notes for PR descriptions and CI checks. And because <code>agentdiff blame</code> reads the live change log, it works before you commit. Human edits are detected automatically via <code>git diff</code> — when you modify agent-written code in your editor, only the lines you actually changed show as human. Agent-written lines you didn't touch keep their original attribution.
             </p>
 
             <hr>
@@ -762,7 +769,7 @@ agentdiff relink                         <span class="code-comment"># re-match c
             <h2>VS Code CodeTour Integration</h2>
 
             <p>
-                Instead of building a custom VS Code extension, AgentDiff generates standard <a href="https://marketplace.visualstudio.com/items?itemName=vsls-liveshare.codetour">CodeTour</a> files — a popular VS Code plugin for code walkthroughs. <code>agentdiff tour</code> produces a <code>.tour</code> file that lets you step through every agent change directly in VS Code, with the prompt, reasoning, and diff shown inline at each stop.
+                Instead of building a custom VS Code extension, AgentDiff generates standard <a href="https://marketplace.visualstudio.com/items?itemName=vsls-contrib.codetour">CodeTour</a> files — a popular VS Code plugin for code walkthroughs. <code>agentdiff tour</code> produces a <code>.tour</code> file that lets you step through every agent change directly in VS Code, with the prompt, reasoning, and diff shown inline at each stop.
             </p>
 
             <p>
