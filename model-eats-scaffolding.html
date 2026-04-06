@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNCHZ7JVPC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZNCHZ7JVPC');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Models Eat Their Scaffolding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #fcfcfc;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #555;
+            --color-text-muted: #888;
+            --color-accent: #2563eb;
+            --color-accent-hover: #1d4ed8;
+            --color-border: #e5e5e5;
+            --color-code-bg: #f5f5f5;
+            --color-blockquote-border: #2563eb;
+            --color-blockquote-bg: #f8fafc;
+            --max-width: 960px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header / Navigation */
+        .site-header {
+            padding: 40px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .site-header a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .site-header a:hover {
+            color: var(--color-text);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 24px 100px;
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .article-header h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .article-subtitle {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .article-meta {
+            margin-top: 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .article-meta .author {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Typography */
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        h2 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 2.5em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 2em;
+            margin-bottom: 0.6em;
+            line-height: 1.4;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            margin: 2em 0;
+            padding: 1.25em 1.5em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--color-text);
+        }
+
+        blockquote p strong {
+            font-weight: 700;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+            padding-left: 0.25em;
+        }
+
+        li::marker {
+            color: var(--color-text-muted);
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: 3em 0;
+        }
+
+        /* Absorbed tag */
+        .absorbed {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5em;
+        }
+
+        .absorbed.full {
+            color: #dc2626;
+        }
+
+        .absorbed.partial {
+            color: #d97706;
+        }
+
+        .absorbed.collapsing {
+            color: #16a34a;
+        }
+
+        /* Stack table */
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2em 0;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.9rem;
+        }
+
+        .stack-wrapper {
+            margin: 2.5em auto;
+            max-width: 960px;
+            aspect-ratio: 5 / 2;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .stack-title {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .stack-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.78rem;
+            line-height: 1.55;
+        }
+
+        .stack-table th {
+            text-align: left;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--color-text-muted);
+            padding: 8px 12px;
+            border-bottom: 2px solid var(--color-text);
+        }
+
+        .stack-table th.col-arrow {
+            text-align: center;
+            width: 36px;
+        }
+
+        .stack-table td {
+            padding: 10px 12px;
+            vertical-align: top;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .stack-table td.col-year {
+            font-weight: 700;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            width: 52px;
+        }
+
+        .stack-table td.col-arrow {
+            text-align: center;
+            color: var(--color-text-muted);
+            vertical-align: middle;
+        }
+
+        .stack-table td.col-scaffold {
+            color: var(--color-text-secondary);
+        }
+
+        .stack-table td.col-absorbed {
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        .stack-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .stack-table tr.status-absorbed td.col-absorbed {
+            color: #dc2626;
+        }
+
+        .stack-table tr.status-partial td.col-absorbed {
+            color: #b45309;
+        }
+
+        .stack-table tr.status-absorbing td.col-absorbed {
+            color: #d97706;
+        }
+
+        .stack-table tr.status-open td.col-absorbed {
+            color: #16a34a;
+        }
+
+        .stack-legend {
+            display: flex;
+            gap: 24px;
+            margin-top: 14px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.7rem;
+            color: var(--color-text-muted);
+        }
+
+        .stack-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .stack-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+        }
+
+        .stack-legend-dot.absorbed { background: #dc2626; }
+        .stack-legend-dot.partial { background: #b45309; }
+        .stack-legend-dot.absorbing { background: #d97706; }
+        .stack-legend-dot.open { background: #16a34a; }
+
+        @media (max-width: 600px) {
+            .stack-wrapper {
+                aspect-ratio: auto;
+            }
+            .stack-table {
+                font-size: 0.72rem;
+            }
+        }
+
+        /* Callout */
+        .callout {
+            margin: 2em 0;
+            padding: 1.5em;
+            background: #f8f8f8;
+            border-radius: 6px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            html {
+                font-size: 16px;
+            }
+
+            .article-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-container {
+                padding: 16px 16px 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <a href="index.html">&larr; Back</a>
+</header>
+
+<article class="article-container">
+
+    <header class="article-header">
+        <h1>Models Eat Their Scaffolding</h1>
+        <p class="article-subtitle">Where the complaints are, the roadmap follows.</p>
+        <div class="article-meta">
+            <span class="author">Sunil Mallya</span> &middot; April 2026
+        </div>
+    </header>
+
+    <!-- ============================================ -->
+    <!-- THE META-PATTERN                             -->
+    <!-- ============================================ -->
+
+    <h2>The Scaffold Is the Roadmap</h2>
+
+    <p>In late 2022, ChatGPT became the fastest-growing product in history. The demos were magical. Then people tried to ship it, and discovered the gap was enormous. Models hallucinated, drifted off task, and forgot what you asked for mid-response. So an entire scaffolding industry emerged: LangChain, prompt engineering as a six-figure job, guardrail companies raising venture rounds. The model was brilliant and unusable at the same time.</p>
+
+    <p>Then the models improved, and the scaffolding disappeared. Prompt ensembling &rarr; RLHF. Output validators &rarr; structured outputs. RAG &rarr; million-token windows. Chain-of-thought &rarr; native reasoning. Agent frameworks &rarr; platform harnesses, happening right now. Each was critical at the time, and each was absorbed within two years.</p>
+
+    <blockquote>
+        <p><strong>AI platforms evolve by absorbing the scaffolding around them. The workarounds builders create today become the primitives of tomorrow.</strong></p>
+    </blockquote>
+
+    <p>This is the operating logic of how AI platforms mature. When a model has a deficiency, builders don't wait for the fix. They patch around it, wrap it in scaffolding, bolt on whatever makes it work. The workaround ships, becomes load-bearing, and before long entire businesses are built on top of it. Then the next generation of the model, or the platform around it, absorbs the workaround natively. The scaffold becomes a primitive, and the company built on the gap either moves up the stack or becomes a rounding error.</p>
+
+    <p>Now look at what's being scaffolded today. Verification systems for domains that don't have test suites. Memory layers so agents can learn from their own runs. Trajectory capture so the next execution is better than the last. Multimodal loops so agents can see screens and read documents, not just process text. Infrastructure to make agents cheap enough to run always-on instead of on-demand.</p>
+
+    <p>Those are the complaints. Those are the roadmap.</p>
+
+    <p>But there is a corollary: <strong>not all scaffolding gets absorbed.</strong> Some of it solves problems that are permanent. Trust (how does one agent prove its identity to another?). Governance (how do you audit what an autonomous system did after the fact?). Permissions (who decides which agent gets access to what?). Accountability (who is responsible when an agent takes an irreversible action?). Compliance (how do you prove to a regulator that your agent followed the rules?). These aren't model deficiencies. They're structural problems that get harder as models get more capable. Knowing the difference between temporary scaffolding and permanent infrastructure is the entire game.</p>
+
+    <hr>
+
+    <!-- ============================================ -->
+    <!-- THE EVIDENCE                                 -->
+    <!-- ============================================ -->
+
+    <h2>The Evidence: 2022 to Now</h2>
+
+    <h3>2022: The Model Was Brittle</h3>
+
+    <p>The intro told the story of the production gap. Here's what the scaffolding actually looked like.</p>
+
+    <p>The <strong>reliability problem</strong> came first. Self-consistency sampling: run the same prompt five times, take majority vote. Prompt ensembling: rephrase the question three ways, average the results. Few-shot curation: hand-pick examples for every prompt because the model couldn't generalize from instructions alone. Model routers sent hard queries to GPT-4 and cheap ones to smaller models. LangChain chained prompts with retry logic and output parsers. Prompt marketplaces appeared. Companies raised venture capital around coaxing reliable behavior out of a model.</p>
+
+    <p>Then there was <strong>format trust</strong>. Models couldn't produce valid JSON. Every production system had output parsers, Pydantic schemas with retry loops, constrained decoding libraries. The pattern was: parse, fail, reprompt, retry, log.</p>
+
+    <p>And <strong>behavioral trust</strong>. You couldn't trust models to stay on topic, resist adversarial inputs, or avoid producing things you couldn't ship. Input classifiers, output filters, prompt injection detection, PII scrubbers, toxicity scorers. Entire companies launched around making models deployable.</p>
+
+    <p>All of it was scaffolding around one root cause: the model was brilliant and required a babysitter.</p>
+
+    <p class="absorbed full">Absorbed.</p>
+    <p>RLHF baked instruction-following into the weights. Structured outputs forced schema compliance at the token generation level. The validator retry loop, the prompt ensembles, the few-shot curation, all became unnecessary overhead. LangChain survived by moving up the stack. The companies built on prompt fragility either pivoted or became footnotes.</p>
+
+    <hr>
+
+    <h3>2023: The Model Learns to Think</h3>
+
+    <p><strong>The reasoning loop.</strong></p>
+
+    <p>Telling a model to "think step by step" dramatically improved performance. A prompting trick. A complete cheat that worked embarrassingly well. Builders extended it: Tree of Thoughts explored reasoning branches in parallel, Reflexion built agents that learned from failure, Process Reward Models scored intermediate steps.</p>
+
+    <p>Then came AutoGPT. The idea was correct: give a model a goal, let it decompose, act, observe, loop. The execution was held together with hope. AutoGPT hallucinated tool calls, spiraled into infinite loops, drifted from the goal by step four. People got excited, then disillusioned within weeks.</p>
+
+    <p>The failure was diagnostic. What broke wasn't the loop, because the loop was right. What broke was the substrate. No reliable environment, no ground truth, no error recovery. The loop needed something to grip.</p>
+
+    <p><strong>The context window.</strong></p>
+
+    <p>Early context windows were 4,000 tokens. You couldn't fit the document in. RAG was the workaround: retrieve chunks at query time. An entire industry emerged around it: vector databases, retrieval pipelines, chunking strategies, embedding models. That mattered enormously. But as context windows expanded and models got better at using long context, retrieval stopped looking like the product and started looking like plumbing. RAG still matters when the model needs to fetch external, live sources of data at runtime, or when provenance, permissions, and efficiency matter. What changed is that it is no longer, by itself, a durable differentiator.</p>
+
+    <p>Fine-tuning was the other approach to the knowledge gap: train the model on your domain data so it already knows what you need. But the foundation model companies were on a data acquisition spree, training on everything they could find and paying data companies for the rest. Each new base model arrived knowing more than the last fine-tuned version did. Meanwhile, in-context learning proved shockingly competitive. Fine-tuning became less compelling as a moat when the pitch was simply "we trained on our corpus." Part of what weakened that moat was that base model providers kept absorbing more domain knowledge into the frontier models themselves through broader and more specialized training data. Static dataset training is a snapshot, not a flywheel. The stronger moat moved to owning the reinforcement environment: the tasks, evaluators, reward signals, and user workflow that generate better trajectories over time. Fine-tuning survived, but in a narrower role: shaping behavior, reliability, and domain-specific performance rather than serving as the primary knowledge transfer mechanism.</p>
+
+    <p class="absorbed partial">Partially absorbed.</p>
+    <p>Reasoning scaffolds were absorbed most completely. o1 internalized the scratchpad, and DeepSeek R1 showed you could train reasoning into the model through reinforcement on outcomes. Retrieval followed a different path: longer context windows made RAG less existential and less differentiated, but not obsolete. Fine-tuning narrowed too: static dataset training became a weaker moat as advantage shifted toward owning the reinforcement environment. Explicit planning frameworks thinned as models learned to plan implicitly. Memory did not resolve at all.</p>
+
+    <p><strong>One thread did not resolve: memory.</strong></p>
+
+    <p>Models have no persistence. Every conversation starts cold. No matter how large the context window gets, it empties between sessions. Builders tried everything: stuff it all into context, sliding window summarization, external retrieval memory, MemGPT treating the context window as a CPU register with external storage as RAM. The sophistication of these solutions revealed how fundamental the problem was. Context is what you can hold in your head right now. Memory is what you carry between sessions. They are as different as RAM and disk. This one carries forward to 2026.</p>
+
+    <hr>
+
+    <h3>2024: Tools and the Action Layer</h3>
+
+    <p>Models had knowledge. They had reasoning. What they didn't have was hands.</p>
+
+    <p>Builders gave them hands: function calling, browser automation, code interpreters, computer use. The action layer arrived. At first this lived mostly in wrappers around the model. Then the model companies pulled it inward: training models to recognize when tools were needed, emit structured tool calls, recover from tool errors, and expose tool-use patterns as native platform capabilities. An ecosystem of tool providers, connector frameworks, and middleware companies sprang up to bridge models to the outside world.</p>
+
+    <p>Complex tasks required sequencing: what's the order? What's contingent? What if a step fails? Builders constructed the planning layer explicitly. ReAct interleaved reasoning and action. Plan-and-Execute separated planning from execution. And then: how do you know the tool call worked? You build a critic. LLM-as-judge emerged: use one model to score another. Expensive, imprecise, the only available answer.</p>
+
+    <p class="absorbed partial">Partially absorbed.</p>
+    <p>Tools largely collapsed into the model layer. Model providers shipped standard tool use as a native capability: function calling, structured tool interfaces, built-in code execution. MCP emerged as the common protocol for exposing remote tools and shared data sources to models. At the same time, in local code workflows, the center of gravity often moved back toward direct CLI execution: simpler, faster, easier to inspect. The middleware market that existed to wire models to APIs shrank as the platform absorbed the plumbing. Explicit planning thinned as models learned to plan implicitly.</p>
+
+    <p>What remains is the verification gap: you can give a model hands, but you cannot yet trust what it does with them. Every irreversible action an agent takes is a trust debt that has not been repaid.</p>
+
+    <hr>
+
+    <blockquote>
+        <p><strong><s>The model</s> The model company absorbs the scaffold.</strong></p>
+    </blockquote>
+
+    <h3>2025: Agents Collapse into the Harness</h3>
+
+    <p>The year of the agent. LangGraph, CrewAI, AutoGen, dozens more. These weren't trivial projects. They existed because the model alone couldn't manage state across steps, recover from errors, coordinate multiple calls, or maintain context through a long task. The frameworks provided the scaffolding that made agents usable in production. But the ones that delivered reliable results shared a common foundation: a code harness underneath.</p>
+
+    <p>Code has an oracle. Tests pass or they don't. Execution gives you ground truth. Write code, run it, feed the error back, loop. The harness solved what AutoGPT couldn't: it gave the loop a floor.</p>
+
+    <p>Then the model companies shipped the harness themselves. Anthropic shipped Claude Code. OpenAI shipped Codex. Manus showed a general-purpose agent could work outside the code domain. The independent agent framework layer got absorbed into the platform, right on schedule.</p>
+
+    <p>The harness also escaped the terminal. Agents moved into native surfaces: IDEs, desktop apps, browser operators, and persistent workspaces. That mattered for the same reason the code harness mattered. Reliability came from being embedded in an environment with files, permissions, local state, and a concrete action surface, not from the model alone.</p>
+
+    <p>Multi-agent and swarm frameworks are next. Startups are building orchestration for swarms of specialized agents. But model companies are already shipping the primitives: sub-agents, background agents, parallel tool execution, agent-to-agent delegation. The ecosystem builds the scaffold, proves the demand, and the platform absorbs it.</p>
+
+    <p class="absorbed partial">Absorbing now.</p>
+
+    <p>The harness is load-bearing, not collapsing. But it has a structural ceiling. It requires a closed environment and an oracle. Code has pytest. "Is this strategy memo correct?" does not. Most knowledge work has no test runner. And the harness is single-threaded while real work is concurrent.</p>
+
+    <p>The real lesson: the agent is not the whole product. The environment is.</p>
+
+    <hr>
+
+    <!-- ============================================ -->
+    <!-- 2026 AND BEYOND                              -->
+    <!-- ============================================ -->
+
+    <h2>2026 and Beyond: What Comes Next</h2>
+
+    <p>The pattern tells you what gets absorbed. The more interesting question is what's being scaffolded right now, because that's the roadmap for the next two years.</p>
+
+    <hr>
+
+    <p><strong>Agents can't verify open-ended work.</strong></p>
+
+    <p>This is the single biggest bottleneck. Code agents work because tests exist. The entire agent loop depends on an unambiguous signal: did it work or didn't it? In law, finance, operations, research, or strategy, that signal is usually weaker, slower, contested, or missing entirely. Agents can already operate in those domains, but they still cannot verify their work with the same reliability they can in software. Until that changes, the limiting factor is not action. It is trust.</p>
+
+    <p><strong>Agents don't learn from their own runs.</strong></p>
+
+    <p>Every session starts cold. But the execution traces, the sequences of actions, tool calls, errors, and corrections, are training data. The companies capturing and learning from agent trajectories will have the Tesla Autopilot advantage: fleet learning. The model gets better because the agents ran, better models produce better traces, and the cycle compounds. The company that closes this loop first has a moat that widens with every agent execution.</p>
+
+    <p><strong>Agents don't retain coherent memory.</strong></p>
+
+    <p>Not the RAG/context window problem, that's solved. This is genuine persistence: what did the agent learn last week, what does the user prefer, what failed before and why. Episodic memory, not retrieval. Human memory is integrated into cognition. It shapes how you reason, not just what facts you can access. What's coming is a data layer that persists identity and experience across agents, sessions, and systems. That layer is infrastructure in the same sense that a database is infrastructure. It does not disappear when models improve.</p>
+
+    <p><strong>Agents are too expensive to run continuously.</strong></p>
+
+    <p>Current agents are on-demand. You invoke them, they run, they stop. The next unlock is making agents cheap enough to run continuously in the background: monitoring, acting proactively, catching things before you ask. This is the difference between a tool you use and a colleague you work with. Inference cost has been dropping fast, but "cheap enough to run an agent 24/7 on every employee's behalf" is a different threshold entirely. When it's crossed, agent deployment goes from project-based to ambient.</p>
+
+    <p><strong>Agents are blind outside of text.</strong></p>
+
+    <p>Real work happens across modalities: reading a dashboard, watching a screen, scanning a PDF, listening to a meeting, interpreting a diagram. The interface between agent and world is still narrow. Models are becoming natively multimodal, but the agent harness around them hasn't caught up. The loop that lets an agent see a screen, decide what to do, act, and verify the result across vision, text, and code is the next scaffolding layer. Some of it will get absorbed into models. The orchestration across modalities won't.</p>
+
+    <hr>
+
+    <p><strong>What stays permanent.</strong></p>
+
+    <p>Not everything above is scaffolding. Verification and trust require external auditability, for the same reason banks have external auditors regardless of how good their internal controls are. Agent identity and authentication are protocol problems, not capability problems. The governance layer only becomes more important as agents gain more capability. These are the layers that models cannot absorb. The enduring companies will be built on them.</p>
+
+    <hr>
+
+    <!-- ============================================ -->
+    <!-- THE STACK, RESOLVED                          -->
+    <!-- ============================================ -->
+
+    <div class="stack-wrapper">
+        <div class="stack-title">From AI Scaffold To Model Primitive</div>
+        <table class="stack-table">
+            <thead>
+                <tr>
+                    <th>Year</th>
+                    <th>Scaffold</th>
+                    <th class="col-arrow"></th>
+                    <th>Absorbed by</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="status-absorbed">
+                    <td class="col-year">2022</td>
+                    <td class="col-scaffold">Prompt templates, few-shot libraries<br>Output parsers, retry loops<br>Safety wrappers, guardrail layers<br>Self-consistency sampling</td>
+                    <td class="col-arrow">&rarr;</td>
+                    <td class="col-absorbed">RLHF, instruction tuning<br>JSON mode, structured outputs<br>Native safety, system prompts<br>Reliable single-pass inference</td>
+                </tr>
+                <tr class="status-partial">
+                    <td class="col-year">2023</td>
+                    <td class="col-scaffold">Chain-of-thought, reasoning scaffolds<br>RAG pipelines, vector databases<br>Autonomous agent loops<br>Fine-tuning for domain knowledge<br>Persistent agent memory</td>
+                    <td class="col-arrow">&rarr;</td>
+                    <td class="col-absorbed"><span style="color:#dc2626">o1, DeepSeek R1, native reasoning</span><br><span style="color:#dc2626">Long context, retrieval as plumbing</span><br><span style="color:#dc2626">Needed a harness to work</span><br><span style="color:#dc2626">Models absorbed domains + RL environments became the moat</span><br><span style="color:#d97706">Harness-native memory, still incomplete</span></td>
+                </tr>
+                <tr class="status-partial">
+                    <td class="col-year">2024</td>
+                    <td class="col-scaffold">Function calling wrappers, browser automation<br>Connector middleware, API shims<br>LLM-as-judge evaluation<br>Explicit planning scaffolds</td>
+                    <td class="col-arrow">&rarr;</td>
+                    <td class="col-absorbed"><span style="color:#dc2626">Native tool use, computer use</span><br><span style="color:#dc2626">MCP for remote tools, CLI for local execution</span><br><span style="color:#d97706">Rubric-based evals, not final oracles</span><br><span style="color:#dc2626">Implicit planning in-weights</span></td>
+                </tr>
+                <tr class="status-absorbing">
+                    <td class="col-year">2025</td>
+                    <td class="col-scaffold">Agent orchestration frameworks<br>Observability and tracing layers<br>Cross-session memory layers<br>Approval checkpoints, human-in-the-loop<br>Swarm coordination scaffolding</td>
+                    <td class="col-arrow">&rarr;</td>
+                    <td class="col-absorbed">Platform harnesses, execution environments<br>Platform observability (early)<br><span style="color:#d97706">Built into harnesses, still incomplete</span><br>Hooks, permission systems<br>Sub-agents, background agents</td>
+                </tr>
+                <tr class="status-open">
+                    <td class="col-year">2026</td>
+                    <td class="col-scaffold">Verification oracles for non-code<br>Trajectory capture / fleet learning<br>Persistent agent memory<br>Multimodal agent loops<br>Agent identity / auth protocols<br>Observability and compliance</td>
+                    <td class="col-arrow">&rarr;</td>
+                    <td class="col-absorbed">External domain eval APIs?<br>Platform-native training loops?<br>Platform memory layers?<br>Native multimodal models + platform orchestration?<br>Industry standard (OAuth for agents)?<br>Independent infra — auditors don't get absorbed</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="stack-legend">
+            <div class="stack-legend-item"><div class="stack-legend-dot absorbed"></div> Absorbed</div>
+            <div class="stack-legend-item"><div class="stack-legend-dot partial"></div> Partially absorbed</div>
+            <div class="stack-legend-item"><div class="stack-legend-dot absorbing"></div> Absorbing</div>
+            <div class="stack-legend-item"><div class="stack-legend-dot open"></div> Open</div>
+        </div>
+    </div>
+
+</article>
+
+</body>
+</html>
