@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNCHZ7JVPC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZNCHZ7JVPC');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Doesn't Replace Workers. It Rewires the Boundaries Between Them.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #fcfcfc;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #555;
+            --color-text-muted: #888;
+            --color-accent: #2563eb;
+            --color-accent-hover: #1d4ed8;
+            --color-border: #e5e5e5;
+            --color-code-bg: #f5f5f5;
+            --color-blockquote-border: #2563eb;
+            --color-blockquote-bg: #f8fafc;
+            --max-width: 1100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header / Navigation */
+        .site-header {
+            padding: 40px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .site-header a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .site-header a:hover {
+            color: var(--color-text);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 24px 100px;
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .article-header h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .article-subtitle {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .article-meta {
+            margin-top: 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .article-meta .author {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Typography */
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        h2 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 2.5em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 2em;
+            margin-bottom: 0.6em;
+            line-height: 1.4;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            margin: 2em 0;
+            padding: 1.25em 1.5em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--color-text);
+        }
+
+        blockquote p strong {
+            font-weight: 700;
+        }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+            padding-left: 0.25em;
+        }
+
+        li::marker {
+            color: var(--color-text-muted);
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: 3em 0;
+        }
+
+        /* Sources */
+        .sources {
+            margin-top: 3em;
+            padding-top: 2em;
+            border-top: 1px solid var(--color-border);
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            color: var(--color-text-muted);
+            line-height: 1.6;
+        }
+
+        /* Figure */
+        .article-figure {
+            margin: 2.5em 0;
+        }
+
+        .article-figure figcaption {
+            text-align: center;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-top: 12px;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            html {
+                font-size: 16px;
+            }
+
+            .article-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-container {
+                padding: 16px 16px 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <a href="index.html">&larr; Back</a>
+</header>
+
+<article class="article-container">
+
+    <header class="article-header">
+        <h1>AI Doesn't Replace Workers. It Rewires the Boundaries Between Them.</h1>
+        <p class="article-subtitle">The model is only the steam engine. The real story is the factory system forming around it.</p>
+        <div class="article-meta">
+            <span class="author">Sunil Mallya</span> &middot; June 2026
+        </div>
+    </header>
+
+    <p>A few years ago, if a CMO wanted a new dashboard, she asked for one. She filed a ticket. She waited for an analyst, a data engineer, or a product team to make time for it.</p>
+
+    <p>Now she asks an AI agent to write the SQL, scaffold the app, connect it to the data, deploy it, and send the link before the afternoon meeting. She is not a software engineer. But she is no longer just a requester. She has moved one layer closer to the work.</p>
+
+    <p>That is the part of AI most companies are still underestimating. They are treating it as a faster way to write emails and ship functions. The real change is that the boundaries between roles are starting to move. The marketer is building. The engineer is designing. The PM is prototyping. The analyst is automating.</p>
+
+    <p>The better analogy is steam power before the factory system formed. The steam engine did not make old work faster — it changed where people worked, how skills were taught, how careers were built. The engine mattered. The larger story was the system that formed around it.</p>
+
+    <p>AI is the engine. The factory system for knowledge work is being built around it now.</p>
+
+    <p>The question is not how much faster anyone can write an email. It is: what happens when every knowledge worker can suddenly do part of the job that used to belong to someone else?</p>
+
+    <hr>
+
+    <h2>Non-Technical Can No Longer Mean Technically Helpless</h2>
+
+    <p>The first change is already visible in ordinary moments: a finance lead writing a reconciliation script instead of waiting for engineering, a revenue-ops manager building and testing a Salesforce automation, a legal-ops manager wiring a clause-review workflow over a contract repository, a support manager shipping a tool that clusters complaints and drafts escalations.</p>
+
+    <p>None of these people becomes a full-time developer — that is the wrong standard. What changes is that they become builders inside their own function. They know enough to inspect a data table, read a log, understand an API, deploy a small tool, and debug far enough to know whether the problem is the data, the prompt, the permissions, or the app. That used to be extra credit. It is becoming the new floor.</p>
+
+    <p>In the old world, "non-technical" could still describe a senior leader. In the AI world, it cannot mean technically helpless. If you lead a function, you will increasingly be expected to understand the systems that run that function — not at the level of an infrastructure engineer, but well enough to build, inspect, and improve the workflows around you.</p>
+
+    <p>The traffic runs both ways. A developer can now produce credible product mockups, landing-page copy, and a demo that looks like a real product. A PM can code the first version of a feature instead of writing a spec and waiting a sprint. A designer can build working prototypes wired to live data.</p>
+
+    <blockquote>
+        <p><strong>AI does not kill specialization. It ends specialization's isolation.</strong></p>
+    </blockquote>
+
+    <p>The highest-value people will not be the ones who defend a narrow job description. They will be the ones who cross boundaries: domain judgment plus technical fluency, product taste plus the ability to ship, operational knowledge plus automation skill.</p>
+
+    <hr>
+
+    <h2>Agents Start as Coworkers. Then They Become the Workflow.</h2>
+
+    <p>The second change starts quietly. An engineer gives an agent a task: fix this bug, write these tests, refactor this module, open a pull request. The engineer still owns the judgment — she defines the scope, checks the architecture, reviews the diff, and decides what ships.</p>
+
+    <p>At first, the agent feels like a coworker.</p>
+
+    <p>You invite it into a shared channel the way you'd add a new hire. It reads the conversation history, picks up context without needing a brief, and handles the task while everyone keeps moving. Teammates can see the work in progress, redirect it, pick up the thread. The agent becomes part of the team's visible surface — not a private tool each person runs in isolation. Then enable ambient mode and the agent stops waiting to be tagged. It monitors the channel, flags the thing you didn't ask about, surfaces the conflict before it becomes a problem. Nobody made a formal decision to change its role. The boundary just shifted.</p>
+
+    <p>That shift happens everywhere repeated collaboration becomes automation. If the same engineer asks an agent every Monday to triage flaky tests, that becomes a scheduled job. If the agent keeps updating dependencies, checking breaking changes, running tests, and opening a pull request, that becomes a standing process. If it watches production errors, clusters failures, drafts candidate fixes, and refreshes documentation overnight, it becomes part of the engineering system.</p>
+
+    <p>The coworker becomes a workflow.</p>
+
+    <p>That is where software engineering changes most. Today, much of the work is paced by human availability: sprints, standups, review windows, on-call rotations. Agents do not keep that clock. They can run overnight, inspect queues, and prepare work before anyone logs on. The engineer's job shifts from doing every step to designing the system that does the steps: what the agent may touch, which files are sensitive, which tests gate a merge, when a human must approve, how failures escalate. Less artisan, more operator.</p>
+
+    <p>The leverage is real, but it is not magic. Some tasks get dramatically faster. Some mature codebases get harder because context, judgment, and review dominate the work. The lesson is not "AI makes engineers fast" or "AI makes engineers slow" — it is that productivity depends on the system around the tool. The best engineers will not need less judgment. They will need more, measured less by lines of code and more by the reliability of the systems they supervise.</p>
+
+    <hr>
+
+    <h2>Everyone Becomes a Manager of Machine Labor</h2>
+
+    <p>This is the thread running underneath the whole shift: the CMO, the engineer, the analyst, the new grad — they all now manage labor that is not human. That changes the meaning of management.</p>
+
+    <p>Delegation, setting a quality bar, knowing when to trust and when to verify — these used to be skills people learned after they were promoted. Now they are becoming entry-level skills. The individual contributor who never wanted direct reports is still running a small team of agents on day one.</p>
+
+    <p>Managing an agent is not the same as managing a person. A person earns trust over time — you learn their strengths, their blind spots, their judgment. An agent does not earn trust in the same way. It can be brilliant in one run and confidently wrong in the next, fail silently, regress without warning. Trust has to be designed into the workflow, not extended relationally. That means checks, tests, approvals, logs, evals, review paths, and escalation rules. As agents produce more output, you cannot audit every artifact by hand. You have to audit the system that produces the artifacts.</p>
+
+    <p>None of this makes trust less important. It makes trust more visible. In a company full of agents, people will be trusted not just for the work they personally produce, but for the systems of work they can reliably manage. Can you keep agents on track? Can you define the right task? Can you catch drift before it becomes damage? Can you turn a messy process into something repeatable? That becomes part of your reputation. The employee who manages agents well earns more trust because they create leverage without creating chaos. The employee who throws work at agents and blindly forwards the output loses trust quickly. Managing machine labor is not about using AI more — it is about getting dependable results from it without lowering the quality bar. That is a new literacy for almost everyone.</p>
+
+    <hr>
+
+    <h2>Executives Stop Reading the Summary and Start Reading the Work</h2>
+
+    <p>Executives used to live through layers of abstraction because they had no other choice. The business was too large to inspect directly, so information traveled upward through managers, dashboards, board decks, and weekly updates. By the time it reached the executive team, it had been summarized, smoothed, and delayed.</p>
+
+    <p>AI changes the resolution. A leader can now ask: which enterprise customers are blocked this week? What changed in escalations since Friday? Which deals are stuck in legal? Which complaints are showing up in calls, tickets, and Slack at the same time? Instead of waiting for someone to prepare the answer, the executive can query the underlying work.</p>
+
+    <p>The point is not to micromanage. Visibility no longer has to move only through the management chain, and that quietly changes what management is for. Managers whose value is mostly relaying information up and assigning tasks down become less necessary. Managers who understand the work deeply, improve the system, coach people, and resolve ambiguity become more valuable.</p>
+
+    <blockquote>
+        <p><strong>AI does not remove management. It removes low-resolution management.</strong></p>
+    </blockquote>
+
+    <hr>
+
+    <h2>The Real Threat Is Not Lost Jobs. It Is a Broken Apprenticeship.</h2>
+
+    <p>This is the change that should keep executives up at night, and it is the one the doom headlines get wrong.</p>
+
+    <p>Entry-level work was historically the low-risk, repetitive layer: draft the first memo, clean the data, build the first analysis, summarize the meeting. That is precisely what AI does first. But "entry-level jobs are shrinking" is the familiar, shallow version. The real problem is deeper: if AI absorbs the grunt work, companies that do not redesign training create a missing middle. For decades, juniors built judgment by doing the routine work. Remove the routine work and you remove the school. You are left with seniors who have experience, agents that do junior tasks, and no one developing the taste required to become senior. The vacancy chain — junior in, mid moves up, senior leaves — snaps at the bottom rung.</p>
+
+    <p>There is a way out. The optimistic version is that the agent becomes part of the new apprenticeship — the thing doing your first-pass analysis can also explain its reasoning, surface what you overlooked, and pressure-test your thinking. Apprenticeship does not vanish; it changes teachers. But that is exactly where it gets uncomfortable. Can you actually learn judgment from the tool doing the work for you? The good version builds taste. The bad version builds deference — a junior who can produce output but cannot tell when it is wrong. The genuinely dangerous version is a cohort that learns from models confidently wrong in correlated ways, inherits the same blind spots, and never develops an independent baseline to catch them.</p>
+
+    <p>You do not just get a missing middle. You get a miscalibrated one.</p>
+
+    <p>Designing apprenticeship so the agent builds taste rather than dependence may be the most important management problem of the decade, and almost no one is treating it as urgent yet.</p>
+
+    <hr>
+
+    <h2>Promotions Reward Leverage, Not Headcount</h2>
+
+    <p>Career growth used to mean managing more people and becoming the person decisions flowed through. That weakens when three-person teams ship what used to take fifteen, and when information moves without human relays. Promotion shifts toward leverage: Can you turn repeated work into a reusable workflow? Raise the quality bar without slowing the team? Build systems that let other people — and other agents — produce more?</p>
+
+    <p>In the old world, being busy was a proxy for value. In the AI world, being busy with repetitive work is increasingly a sign that the system is badly designed. The valuable person notices the repetition, captures the pattern, turns it into a verified workflow, and makes the whole team faster.</p>
+
+    <hr>
+
+    <h2>Some Roles Expand. Some Job Descriptions Disappear.</h2>
+
+    <p>It is tempting to soften this. We should not.</p>
+
+    <p>Work built mostly on moving information, formatting outputs, first-pass synthesis, and coordinating routine handoffs will compress — absorbed into software, into agents, or merged into broader jobs. Other roles expand dramatically. The marketer who builds tools, the operator who automates processes, the engineer who supervises fleets of agents, the executive who inspects detail and rebuilds the org around what they find — each gets a larger surface area.</p>
+
+    <p>AI does not simply replace workers. It changes the surface area of every worker. The people who adapt get bigger scopes. The people who do not watch their scope narrow until it disappears.</p>
+
+    <hr>
+
+    <h2>The Real Transition: Work Becomes Machine-Native</h2>
+
+    <p>The Industrial Revolution reorganized society around machine production. Work moved into factories, time was standardized, and training, management, cities, and schools all changed to match. AI reorganizes knowledge work the same way.</p>
+
+    <p>This is the actual transition — not "everyone gets a chatbot," not "emails write themselves." Work stops being organized purely around human execution and becomes organized around humans plus machines: humans setting direction, judgment, constraints, accountability, and taste; agents doing more of the continuous, repeatable, inspectable work underneath; and the two coaching each other across that loop rather than competing across a line.</p>
+
+    <p>Eventually the same logic will leave the office, just as industrial machines eventually reshaped the home. The factory did not stay inside the factory — machine logic reached the kitchen, the laundry room, the commute, the school, and the city. AI will likely make the same trip. Today, most of our intelligence lives in someone else's cloud. It is not hard to imagine the home gaining a local intelligence device the way it once gained appliances: private compute you actually own, for the conversations, decisions, memories, and thinking you do not want routed through someone else's servers.</p>
+
+    <p>The office gets agents. The home gets a mind of its own.</p>
+
+    <figure class="article-figure">
+        <svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;" aria-hidden="true">
+          <defs>
+            <radialGradient id="rg-orb" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#1d4ed8"/>
+              <stop offset="100%" stop-color="#3b82f6" stop-opacity="0.7"/>
+            </radialGradient>
+            <radialGradient id="rg-halo-in" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#2563eb" stop-opacity="0.2"/>
+              <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="rg-halo-out" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#2563eb" stop-opacity="0.07"/>
+              <stop offset="100%" stop-color="#2563eb" stop-opacity="0"/>
+            </radialGradient>
+            <filter id="f-node" x="-60%" y="-60%" width="220%" height="220%">
+              <feGaussianBlur stdDeviation="2.5" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="f-orb" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="10" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+          </defs>
+
+          <!-- Background -->
+          <rect width="960" height="420" fill="#f8f9fe" rx="10"/>
+
+          <!-- ── LEFT PANEL: THE OFFICE ── -->
+          <rect x="20" y="20" width="430" height="380" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+          <text x="235" y="58" text-anchor="middle" font-family="Inter,-apple-system,sans-serif" font-size="10" font-weight="700" letter-spacing="0.12em" fill="#94a3b8">THE OFFICE</text>
+
+          <!-- edges: A(115,140) B(235,108) C(358,135) D(135,215) E(235,205) F(348,210) G(125,305) H(235,318) I(358,298) -->
+          <g stroke="#bfdbfe" stroke-width="1.5">
+            <line x1="115" y1="140" x2="235" y2="108"/>
+            <line x1="235" y1="108" x2="358" y2="135"/>
+            <line x1="115" y1="140" x2="135" y2="215"/>
+            <line x1="115" y1="140" x2="235" y2="205"/>
+            <line x1="235" y1="108" x2="235" y2="205"/>
+            <line x1="358" y1="135" x2="348" y2="210"/>
+            <line x1="358" y1="135" x2="235" y2="205"/>
+            <line x1="135" y1="215" x2="235" y2="205"/>
+            <line x1="235" y1="205" x2="348" y2="210"/>
+            <line x1="135" y1="215" x2="125" y2="305"/>
+            <line x1="235" y1="205" x2="235" y2="318"/>
+            <line x1="348" y1="210" x2="358" y2="298"/>
+            <line x1="125" y1="305" x2="235" y2="318"/>
+            <line x1="235" y1="318" x2="358" y2="298"/>
+            <line x1="125" y1="305" x2="235" y2="205"/>
+            <line x1="358" y1="298" x2="235" y2="205"/>
+          </g>
+
+          <!-- node halos -->
+          <g filter="url(#f-node)" opacity="0.8">
+            <circle cx="115" cy="140" r="15" fill="#eff6ff"/>
+            <circle cx="235" cy="108" r="15" fill="#eff6ff"/>
+            <circle cx="358" cy="135" r="15" fill="#eff6ff"/>
+            <circle cx="135" cy="215" r="15" fill="#eff6ff"/>
+            <circle cx="235" cy="205" r="20" fill="#dbeafe"/>
+            <circle cx="348" cy="210" r="15" fill="#eff6ff"/>
+            <circle cx="125" cy="305" r="15" fill="#eff6ff"/>
+            <circle cx="235" cy="318" r="15" fill="#eff6ff"/>
+            <circle cx="358" cy="298" r="15" fill="#eff6ff"/>
+          </g>
+
+          <!-- nodes -->
+          <g fill="#2563eb">
+            <circle cx="115" cy="140" r="5"/>
+            <circle cx="235" cy="108" r="5"/>
+            <circle cx="358" cy="135" r="5"/>
+            <circle cx="135" cy="215" r="5"/>
+            <circle cx="235" cy="205" r="8"/>
+            <circle cx="348" cy="210" r="5"/>
+            <circle cx="125" cy="305" r="5"/>
+            <circle cx="235" cy="318" r="5"/>
+            <circle cx="358" cy="298" r="5"/>
+          </g>
+
+          <!-- node labels -->
+          <g font-family="Inter,-apple-system,sans-serif" font-size="9" fill="#64748b" text-anchor="middle">
+            <text x="115" y="125">Eng</text>
+            <text x="235" y="93">PM</text>
+            <text x="358" y="120">Design</text>
+            <text x="128" y="200">Data</text>
+            <text x="247" y="192">Ops</text>
+            <text x="355" y="195">Legal</text>
+            <text x="118" y="290">Mktg</text>
+            <text x="235" y="335">Finance</text>
+            <text x="365" y="283">Support</text>
+          </g>
+
+          <text x="235" y="378" text-anchor="middle" font-family="Inter,-apple-system,sans-serif" font-size="10.5" fill="#94a3b8" font-style="italic">role boundaries dissolving</text>
+
+          <!-- ── ARROW ── -->
+          <text x="480" y="219" text-anchor="middle" font-family="Inter,-apple-system,sans-serif" font-size="26" fill="#cbd5e1">→</text>
+
+          <!-- ── RIGHT PANEL: THE HOME ── -->
+          <rect x="510" y="20" width="430" height="380" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1.5"/>
+          <text x="725" y="58" text-anchor="middle" font-family="Inter,-apple-system,sans-serif" font-size="10" font-weight="700" letter-spacing="0.12em" fill="#94a3b8">THE HOME</text>
+
+          <!-- house: roof apex (725,105), base (600,220)-(850,220) -->
+          <polygon points="600,220 725,105 850,220" fill="none" stroke="#dde4f0" stroke-width="2" stroke-linejoin="round"/>
+          <!-- walls -->
+          <rect x="618" y="218" width="214" height="148" fill="none" stroke="#dde4f0" stroke-width="2"/>
+          <!-- door centered at x=725 -->
+          <rect x="701" y="296" width="48" height="70" rx="2" fill="none" stroke="#dde4f0" stroke-width="1.5"/>
+
+          <!-- orb at (725, 252) — above the door -->
+          <circle cx="725" cy="252" r="88" fill="url(#rg-halo-out)"/>
+          <circle cx="725" cy="252" r="58" fill="url(#rg-halo-in)"/>
+          <circle cx="725" cy="252" r="34" fill="#eff6ff"/>
+          <!-- glow -->
+          <circle cx="725" cy="252" r="26" fill="#2563eb" opacity="0.2" filter="url(#f-orb)"/>
+          <!-- orb -->
+          <circle cx="725" cy="252" r="18" fill="url(#rg-orb)"/>
+          <!-- highlight -->
+          <circle cx="718" cy="245" r="5" fill="white" opacity="0.4"/>
+
+          <text x="725" y="378" text-anchor="middle" font-family="Inter,-apple-system,sans-serif" font-size="10.5" fill="#94a3b8" font-style="italic">a mind of its own</text>
+        </svg>
+        <figcaption>The office gets agents. The home gets a mind of its own.</figcaption>
+    </figure>
+
+    <p>AI changes how work happens because it changes what people are capable of doing, what teammates — human and not — expect of each other, what managers can see, what companies can automate, and what the next generation is trained to become. The model is only the steam engine. The real story is the factory system forming around it — and this time, it is forming in years, not decades.</p>
+
+    <div class="sources">
+        <em>Sources include KPMG's Q4 2025 AI Pulse, McKinsey's 2025 State of AI survey, Revelio Labs' entry-level hiring analysis, Business Insider's reporting on PwC UK's graduate intake, Peng et al.'s GitHub Copilot controlled study, METR's developer-productivity trial and its 2026 update, and 2026 research on agent-authored GitHub pull requests. Figures are directional and context-dependent, not universal.</em>
+    </div>
+
+</article>
+
+</body>
+</html>
