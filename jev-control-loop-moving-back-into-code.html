@@ -185,6 +185,30 @@
             font-weight: 700;
         }
 
+        /* Stat callout */
+        .stat-callout {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin: 1.25em 0 1.75em;
+        }
+
+        .stat-callout-number {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .stat-callout-text {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            color: var(--color-text-secondary);
+            line-height: 1.4;
+        }
+
         /* Code */
         code {
             font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
@@ -334,17 +358,22 @@
         </div>
     </header>
 
-    <div class="hero-image-container">
-        <img src="images/control-loop-pendulum.png" alt="The control loop pendulum: four eras of software, from traditional control-in-code through LLM-enabled apps and agents, back to control returning to code in semantic software" class="hero-image">
-    </div>
-
     <p>Jev didn't come out of nowhere. It's the visible tip of something that has been building inside production agents for over a year, one workaround at a time, mostly by hand and mostly without a name. Teams kept discovering the same thing: much of what a frontier model does inside an agent loop isn't open-ended reasoning, it's choosing a tool, deciding whether a step succeeded, scoring risk, or answering a question with a small, fixed set of possible answers, and every one of those decisions still carried the latency and cost of a full generative call.</p>
 
     <p>So teams patched around it: routing individual steps to cheaper models, caching a classifier beside the agent, hand-rolling a router nobody wanted to own, hard-coding the obvious branches once the bill and the latency got embarrassing. None of it had a category. It was simply what you did after running agents in production long enough.</p>
 
+    <div class="stat-callout">
+        <div class="stat-callout-number">90%</div>
+        <div class="stat-callout-text">token usage cut by one team, routing routine agent steps to a cheaper model instead of the frontier one.</div>
+    </div>
+
     <p>TypeSafe's Jev is the clearest attempt yet to turn that instinct into a named primitive and an API, but the interesting story isn't Jev itself, and <a href="#token-prices">it isn't really the money either, even though the money is what started it</a>. It's that developers were already reconstructing this architecture piecemeal, taking bounded judgment out of the generative loop and putting explicit control structure back around it.</p>
 
     <p><strong>The control loop was already moving back into code. Jev is expediting this.</strong></p>
+
+    <div class="hero-image-container">
+        <img src="images/control-loop-pendulum.png" alt="The control loop pendulum: four eras of software, from traditional control-in-code through LLM-enabled apps and agents, back to control returning to code in semantic software" class="hero-image">
+    </div>
 
     <p>To see why that matters, start further back.</p>
 
