@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNCHZ7JVPC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZNCHZ7JVPC');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sim2Real Gap Is Coming for AI Agents</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #fcfcfc;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #555;
+            --color-text-muted: #888;
+            --color-accent: #2563eb;
+            --color-accent-hover: #1d4ed8;
+            --color-border: #e5e5e5;
+            --color-code-bg: #f5f5f5;
+            --color-blockquote-border: #2563eb;
+            --color-blockquote-bg: #f8fafc;
+            --max-width: 1100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header / Navigation */
+        .site-header {
+            padding: 40px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .site-header a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .site-header a:hover {
+            color: var(--color-text);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 24px 100px;
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .hero-image-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .article-header h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .article-subtitle {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .article-meta {
+            margin-top: 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .article-meta .author {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Typography */
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        h2 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 2.5em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 2em;
+            margin-bottom: 0.6em;
+            line-height: 1.4;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            margin: 2em 0;
+            padding: 1.25em 1.5em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--color-text);
+        }
+
+        blockquote p strong {
+            font-weight: 700;
+        }
+
+        /* Stat callout */
+        .stat-callout {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin: 1.25em 0 1.75em;
+        }
+
+        .stat-callout-number {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .stat-callout-text {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            color: var(--color-text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+            font-size: 0.88em;
+            background: var(--color-code-bg);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: #c7254e;
+        }
+
+        pre {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 1.25em 1.5em;
+            overflow-x: auto;
+            margin: 1.75em 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d4d4d4;
+            font-size: 0.85rem;
+            line-height: 1.55;
+            white-space: pre;
+        }
+
+        /* Side-by-side diagram pairs */
+        .diagram-row {
+            display: flex;
+            gap: 1.25em;
+            margin: 1.75em 0;
+        }
+
+        .diagram-row pre {
+            flex: 1 1 0;
+            margin: 0;
+        }
+
+        @media (max-width: 600px) {
+            .diagram-row {
+                flex-direction: column;
+            }
+        }
+
+        /* Collapsible prompt block */
+        .prompt-details {
+            margin: 1.75em 0;
+        }
+
+        .prompt-details pre {
+            margin-top: 12px;
+        }
+
+        .prompt-details summary {
+            cursor: pointer;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            list-style: none;
+        }
+
+        .prompt-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .prompt-details summary::before {
+            content: '▸ ';
+        }
+
+        .prompt-details[open] summary::before {
+            content: '▾ ';
+        }
+
+        /* Hover-labeled prompt sections */
+        .prompt-section {
+            display: block;
+            margin: 0 -1.5em;
+            padding: 1px 1.5em;
+            border-left: 3px solid transparent;
+            cursor: help;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .prompt-section--system:hover { background: rgba(37, 99, 235, 0.14); border-left-color: #60a5fa; }
+        .prompt-section--task:hover { background: rgba(124, 58, 237, 0.14); border-left-color: #a78bfa; }
+        .prompt-section--context:hover { background: rgba(13, 148, 136, 0.16); border-left-color: #2dd4bf; }
+        .prompt-section--examples:hover { background: rgba(180, 83, 9, 0.16); border-left-color: #f59e0b; }
+        .prompt-section--user:hover { background: rgba(220, 38, 38, 0.14); border-left-color: #f87171; }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+            padding-left: 0.25em;
+        }
+
+        li::marker {
+            color: var(--color-text-muted);
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: 3em 0;
+        }
+
+        .hero-caption {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            color: var(--color-text-muted);
+            line-height: 1.5;
+            max-width: 720px;
+            margin: 12px auto 0;
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.75em 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        th, td {
+            text-align: left;
+            vertical-align: top;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--color-text);
+            border-bottom: 2px solid var(--color-text);
+        }
+
+        td:first-child {
+            font-weight: 500;
+        }
+
+        /* Companion note */
+        .companion-note {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            padding: 1em 1.25em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 2em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            html {
+                font-size: 16px;
+            }
+
+            .article-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-container {
+                padding: 16px 16px 60px;
+            }
+
+            pre code {
+                font-size: 0.78rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <a href="index.html">&larr; Back</a>
+</header>
+
+<article class="article-container">
+
+    <header class="article-header">
+        <h1>The Sim2Real Gap Is Coming for AI Agents</h1>
+        <p class="article-subtitle">Robotics spent decades learning that the environment, not the algorithm, is the hard problem. AI agents are next.</p>
+        <div class="article-meta">
+            <span class="author">Sunil Mallya</span> &middot; October 2026
+        </div>
+    </header>
+
+    <p>I've seen this movie before. The bottleneck in AI agents is no longer intelligence; it's contact with reality.</p>
+    <p>I've spent years building the worlds AI learns in. I helped build AWS DeepRacer, one of the largest Sim2Real experiments ever run, and I've worked on real enterprise RL environments for other robotic applications, for chaos engineering, for oil and gas exploration and in the LLM world: RLHF to RL fine-tuning. Across all of them, the same lesson kept repeating: the algorithm is rarely the hardest problem. The environment is.</p>
+    <p>The first time I learned that, it was from a car the size of a shoebox. In 2018, with AWS DeepRacer, we trained a 1/18th-scale car to race using reinforcement learning entirely in simulation. Driving in simulation was the easy part; surviving a real track was not. One of our most surprising findings was that simply reversing the car's direction during training did more for transfer than injecting random noise. It told us the car needed to experience more of the real scenarios it would face, not just noisier versions of the same one. The algorithm was fine. We just hadn't taught the car enough about reality.</p>
+    <p>Every AI system that has impressed us learned inside a world we built for it: Go, StarCraft, the internet itself. Now we're asking agents to leave those worlds and act inside real software, real companies and real economies, where the stakes are real and nothing resets. The gap between where an AI trains and where it acts is about to become the defining problem of the field. Robotics has fought it for three decades.</p>
+    <div class="hero-image-container">
+        <img src="images/rl-environment-ladder.png" alt="From acing benchmarks to surviving reality: five levels of RL environments, L0 answer key, L1 fixture, L2 long-horizon sandbox (where we are today), L3 stateful and path-dependent, L4 multi-agent and non-stationary, followed by a Sim2Real gap, measured by transfer, before production, the real company." class="hero-image">
+    </div>
+
+    <h2>What Sim2Real is, and why it's back</h2>
+    <p>Sim2Real is the craft of training an agent policy somewhere cheap, fast and safe, a simulator, and having it work somewhere expensive, slow and unforgiving: the real world. The distance between the two is the Sim2Real gap. Physics is approximated, cameras see glare the renderer never drew, motors lag, and reality is wider and weirder than anything you modeled, so a policy that's superhuman in simulation can be useless the moment it touches the world, and the culprit is almost never the learning algorithm.</p>
+    <p>For most of the last decade, Sim2Real was a robotics problem. As LLMs become agents taking on real-world work, that's changing, and the version coming for them is different from the one robots faced, and harder to specify. Robots have to survive incomplete models of physics. Agents have to survive incomplete models of organizations: what other people will do, how systems respond, when permissions change, how approvals happen and how exceptions propagate. <strong>The hard part of enterprise Sim2Real isn't reproducing software interfaces. It's reproducing the behavior of the world behind them.</strong></p>
+    <p>Here's the example I'll keep coming back to: one incident that passes through two agents.</p>
+    <p><strong>From the coding side.</strong> A developer asks a coding agent to fix intermittent checkout failures: under load, calls to the payment processor time out and the checkout errors. In a typical RL environment, the agent gets a frozen repository, a failing test and a sandbox. It traces the failures to the timeouts, wraps the call in retry logic, and the tests pass. Perfect score. Now ship that fix. In production, the payment processor sometimes completes a charge <em>and then</em> times out, something the mocked processor in the test suite never did. Retrying without an idempotency key charges the customer twice. The canary looks healthy at first; then traffic climbs, duplicate charges appear and an alert fires. Meanwhile, another engineer has changed the worker configuration, so it isn't even obvious whose change caused it. The agent now has to investigate, roll back safely and deal with payments that already went through. The code was correct according to the tests. The outcome was not.</p>
+    <p>The story doesn't end when the coding agent ships its fix. The duplicate charge is now somebody else's problem. A customer opens a support ticket, and a second agent inherits a world already changed by the first agent's actions.</p>
+    <p><strong>From the support side.</strong> The customer was charged twice when upgrading their plan and wants a refund before their statement closes. In a typical training environment, that's one clean ticket, one account record, a refund API that returns success and a verifier that checks a refund was issued. In the real company, the ticket is vague and angry. The customer has two accounts under similar emails. One charge has settled; the duplicate is still a pending authorization that will drop off on its own, so refunding it would return money that was never collected. The policy exception for annual plans lives in a Slack thread, not the help center. A colleague has already promised a credit. Refunds over $500 need a manager's approval, and issuing one quietly triggers an automation that cancels the subscription.</p>
+    <p>That's the heart of it: <strong>one agent's output becomes another agent's environment.</strong> These are the real environments agents are being asked to work in. Not a repo and a test, not a ticket and a refund API, but a living system where code, money, customers and colleagues are all connected and every action ripples outward. Today's RL mostly trains agents on the clean versions.</p>
+    <h2>Where today's RL environments fall short</h2>
+    <h3>What RL in the LLM world looks like today</h3>
+    <p>LLM reinforcement learning has the same three ingredients robotics does: an <strong>environment</strong> (a sandbox with a repo, a shell, a browser or a set of tools), a <strong>task</strong> (a prompt) and a <strong>verifier</strong> (a test suite, a math checker or a rubric-graded judge). RL with verifiable rewards (RLVR) took off first in math and code because those domains offer <strong>cheap, reliable feedback</strong>, automatically and at scale. The field harvested the easiest case first, and rightly so. But a verifiable reward is not the same as a faithful environment: a patch that passes tests in a sandbox can still fail in production, and almost none of these setups model how a world responds to an agent's actions over time. Even there, the last mile runs through people: developers are today's Sim2Real layer, reviewing, testing and hardening LLM-written code before it meets production.</p>    <h3>The challenges: where the gap reappears</h3>
+    <p>Agent environments are getting better fast. Benchmarks like <a href="https://appworld.dev/">AppWorld</a> and <a href="https://github.com/sierra-research/tau2-bench">τ²-bench</a> support multistep interaction and application state that changes as the agent acts; τ²-bench lets a simulated user act on shared state too, and supports RL training. But <strong>most still operate inside bounded, controlled worlds.</strong> They capture how an application responds to an action, but rarely reproduce the full consequences of that action across other systems, people and time. On the ladder above, they sit at L2: the agent can poke the world and the app answers, but the world never pokes back on its own. That hides the gap until production, where everything else moves.</p>
+    <p>There's a gold rush underway. A wave of companies now sells RL environments to frontier labs, and too many of them are selling the same thing: <strong>mocked APIs, synthetic data and a grader, packaged as a "world."</strong> An LLM writes the company, the employees, the tickets and the Slack threads. Another LLM writes the task. A third grades the result. It's simulation all the way down, and the only thing anchoring it to reality is the vendor's word.</p>
+    <p>These environments are built to be sold, not to transfer. Tasks get tuned to the difficulty band where a model learns fastest, not to what real work looks like: easy to learn from, not true to reality. And to be fair, they work, for now. Models trained on them get measurably better at tool calls, formats and multistep workflows, and those are real early wins. But they're the wins you get from teaching a model the shape of work, not its substance. My bet is they saturate fast, within the year, because once a model has learned the shape, more synthetic tasks of the same kind stop teaching it anything. Their metrics are how many tasks, how many tools and how many domains. Those are easy to count and easy to put on a pitch deck, and none of them answers the only question that matters: <strong>does an agent that gets better in this environment get better in the real world?</strong> Most vendors have never measured it. Many couldn't if they tried, because they've never seen the production systems their environments claim to imitate.</p>
+    <p>And they're not about to. There is no endless supply of real enterprise data waiting to be fed into models. Enterprises increasingly want to own their intelligence, not rent it back from a lab that learned it from their workflows. So the real workplace data that does reach the market is skewed: a lot of it comes from companies that shut down, selling off their Slack history, email and tickets on the way out. Think about what that teaches. An archive records how work moved, not why it went one way instead of another. <strong>An agent trained on it learns the dynamics of a company, not the judgment that made one succeed.</strong> And it never meets the volume of data, the tangle of systems and the web of interactions that a thriving business has to handle every day.</p>
+    <p>Robotics learned this the expensive way. Nobody buys a simulator because it has ten thousand scenes. They buy it because policies trained in it work on the real robot. Agent environments should be held to the same bar. Until a vendor can show that success in their environment predicts success in production, they're not selling a world. They're selling a fixture with a nicer story.</p>
+    <p>The gap reappears the moment tasks touch the world, and it shows up in four places.</p>
+    <ul>
+    <li><strong>Environment fidelity.</strong> Mocked APIs never rate-limit, time out or return the malformed payload a real vendor sends on a Tuesday. Real workflows branch through exceptions, approvals and workarounds nobody documented, and real UIs come in endless versions and half-migrated screens. A sandbox captures the happy path; production is mostly the tail. Even the content is too clean: agent-generated worlds come out templated, with none of the human errors real work is full of.</li>
+    <li><strong>Task distribution.</strong> Synthetic tasks are clean and well-specified. Real requests are ambiguous, under-specified and long-tailed, and often the hardest part of the job is working out what was actually asked.</li>
+    <li><strong>Verifier gap.</strong> A verifier is a proxy for what you want, and policies exploit proxies: deleting failing tests, special-casing inputs, pattern-matching a grader. Verifiers also miss what they don't check: an agent asked to email your boss about a raise that also emails your customer and your friends still scores 1.0. And most business processes have no unit test at all. Whether a refund was fair or an email struck the right tone is human judgment; LLM judges stand in for it, but they miss obvious things at long context, so the grader is itself a noisy simulation of a human. Compress all of that into pass/fail and the sim quietly stops matching reality.</li>
+    <li><strong>Leakage.</strong> Generated environments give away answers reality never would. Task prompts come out over-prescriptive because the model writing them is trying to be helpful. Seeded indexes point straight to the five documents that matter out of thousands. And a stray message in the world can contradict what the verifier expects, so the model is penalized for following instructions. Here the sim is easier than reality and teaches bad habits at the same time.</li>
+    </ul>
+    <p>Our double charge hits them all. The mocked processor never succeeds and then times out, the training ticket says exactly what's wrong while the real one says "you people robbed me," and "refund issued" scores 1.0 even when it went to the wrong account or set off the cancellation automation.</p>
+    <h2>What robotics learned, and what transfers to agents</h2>
+    <p>My own education in this started with DeepRacer. Getting a sim-trained policy to survive a real track took months of expert effort modeling reality: calibrated physics, camera geometry and motor response, a physical replica of one of the simulated tracks, and heavy noise injection wherever we couldn't model the world. By the time of our <a href="https://arxiv.org/abs/1911.01562">2019 paper</a>, thousands of developers had trained models this way, which the paper described as the first successful large-scale deployment of model-free deep RL on a robot controlled from raw camera images alone.</p>
+    <p>The gap showed up everywhere: glare the renderer never drew, batteries that changed the car's speed mid-session, reward functions that policies gamed. The lesson I keep coming back to: <strong>the gap is not a bug you fix once. It is the product.</strong> The full story, with numbers, is in the companion post, <a href="sim2real-in-robotics.html#deepracer">Sim2Real in Robotics</a>.</p>
+    <p>DeepRacer wasn't unique in this. Across every environment I've worked on, the hard part never changed: deciding what of reality to model, what to randomize, and how to know whether a policy that wins in the environment will hold up in the world. And each environment was only as good as the domain experts who shaped it. Geoscientists knew which subsurface physics actually mattered, infrastructure engineers knew how systems really fail, and roboticists knew where the simulator lies. RL engineers can build the machinery, but only the people who live in a domain know which details of reality you can't afford to leave out.</p>
+    <p>Robotics as a whole has fought this gap for decades, and the modern deep-RL wave since about 2017 turned it into a recipe: model what you can, randomize what you can't, distill from teachers that see privileged ground truth, adapt online, evaluate for transfer and scale the simulator (<a href="sim2real-in-robotics.html#history">Sim2Real in Robotics</a> has the full history). Every part of that recipe has a direct agent equivalent:</p>
+    <div class="table-wrap">
+    <table>
+    <thead>
+    <tr>
+    <th>Lesson</th>
+    <th>In robotics</th>
+    <th>For agents</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>Randomize what you can't model</td>
+    <td>Friction, mass, latency, sensor noise, lighting</td>
+    <td>Schemas, latencies, failure modes, tool availability, org structure</td>
+    </tr>
+    <tr>
+    <td>Model what you can</td>
+    <td>Calibrated twins; actuator and residual models learned from real data</td>
+    <td>Environment models built from real production traces and API calls</td>
+    </tr>
+    <tr>
+    <td>Cheat in sim, then distill</td>
+    <td>A teacher sees ground-truth physics; the student sees only cameras</td>
+    <td>A teacher sees the true cause behind a ticket, or other hidden state; the student sees only what production shows</td>
+    </tr>
+    <tr>
+    <td>Adapt online</td>
+    <td>The policy infers terrain and payload from its recent history</td>
+    <td>The agent probes its environment for quirks, permissions and conventions before it acts</td>
+    </tr>
+    <tr>
+    <td>Evaluate for transfer</td>
+    <td>Robust evaluation, plus real rollouts that tune the sim</td>
+    <td>Evals validated against production outcomes, with production failures fed back as new environments</td>
+    </tr>
+    <tr>
+    <td>Scale the sim, not the robot</td>
+    <td>GPU-parallel simulation, thousands of environments per GPU</td>
+    <td>Environments you can fork, pause and snapshot, including the world outside the sandbox (more on this below)</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <h3>Why RL for agents is hard in different ways</h3>
+    <p>The recipe has a limit, and it applies to agents too. It works when a world can be captured by a handful of parameters: a walking robot mostly needs friction, mass and latency right, so randomizing those covers reality. It struggles when every interaction is different: a hand that grasps, folds or inserts meets endless objects and contact patterns, which is why dexterous manipulation is still largely open. Most agent work is manipulation, not walking. Every workflow, system and document is its own object with its own quirks, and that's exactly where the gap will bite.</p>
+    <p>Robotics' limit is the agent's starting point. As agents move past RLVR into browsers, SaaS tools, codebases and whole companies, the training environment becomes a model of someone else's world: mocked APIs, simulated users, synthetic tickets, a guess at how an organization behaves. That isn't universally harder than robotics, but it's harder to specify and reconstruct in distinctive ways:</p>
+    <ul>
+    <li><strong>Physical laws are shared. Company rules aren't.</strong> Robots face enormous variation in dynamics, materials and contact conditions, but that variation plays out under laws you can write down and measure. An enterprise's rules live in schemas, permissions, tribal workflows and flaky vendors, much of it undocumented, so there's often no ground truth to calibrate against.</li>
+    <li><strong>Reality keeps moving.</strong> Gravity never ships a new version. APIs, products and processes change weekly, so the gap reopens even after you close it.</li>
+    <li><strong>The failures are silent.</strong> A robot that misses the gap falls over. An agent that misses it confidently takes a plausible, wrong action, like refunding the wrong account, and nobody notices until much later.</li>
+    <li><strong>The verifier is part of the sim.</strong> Beyond verifiable domains, rewards come from rubrics, judges and simulated outcomes, and each one is another surface to overfit.</li>
+    <li><strong>There is no reset.</strong> Real agent state persists across hours and days, and RL's training infrastructure assumes the opposite.</li>
+    </ul>
+    <p>Nowhere does this bite harder than inside the enterprise.</p>
+    <h2>Enterprise agents: closed loops, not answers</h2>
+    <p>The hottest thing in AI right now is LLM RL on verifiable tasks. But the enterprise agent problem looks much closer to robotics than to math and code.</p>
+    <p>The difference is closed-loop control. A math problem is open-loop: one prompt, one answer, check it. An enterprise agent <strong>reacts to situations, not just data.</strong> On the double-charge ticket, a colleague edits the account a minute after the agent reads it, a partial refund fires a cancellation email, and the processor's webhook arrives an hour late. Every action changes what the agent sees next, some can't be undone, and whether the case went well may not be clear until the customer renews or churns months later.</p>
+    <p>That is a robot in an unstructured environment. And it has the same four gaps:</p>
+    <div class="table-wrap">
+    <table>
+    <thead>
+    <tr>
+    <th>Robotics gap</th>
+    <th>Enterprise agent equivalent</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>Dynamics: physics differs from sim</td>
+    <td>Billing, CRM and payment APIs rate-limit, lag behind each other and fail partially</td>
+    </tr>
+    <tr>
+    <td>Perception: real sensors see differently</td>
+    <td>Ticket histories, CRM notes and account records are noisy, inconsistent and incomplete</td>
+    </tr>
+    <tr>
+    <td>Actuation: motors don't do exactly what's commanded</td>
+    <td>Approval limits, permissions and automations stop actions from landing as intended</td>
+    </tr>
+    <tr>
+    <td>Distribution: the world is long-tailed</td>
+    <td>The ticket you trained on is never the ticket you get</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <p>The good news is that the robotics recipe from the table above transfers almost one to one, from randomizing schemas and failure modes to privileged teachers that see the true cause behind a ticket. One part deserves a warning. Real-to-sim is the obvious way to make environments look like a real company, since every enterprise already records how its systems behave in logs, API calls, tickets and incident timelines. But seed an environment with one company's data and the model learns that company's quirks. It's the DeepRacer lesson again: train on one track and you learn the track, not driving. Real-to-sim and randomization have to work together, inside environments that persist and fork the way real workflows do.</p>
+    <p>Concretely, here's what an environment would need to train an agent that handles the double-charge ticket well. The simulator has to reproduce concurrent changes and incomplete records: the colleague's note, the pending authorization, the late webhook. The task has to allow several reasonable paths, because a good human agent might refund, credit or escalate. The verifier has to reward resolving the customer's problem and penalize collateral damage, like the wrong account, the broken exception or the surprise cancellation. And every ticket the agent mishandles in production has to flow back in as a new training scenario. That last loop is what turns an environment from a test into a bridge.</p>
+    <p>My bet: the bottleneck for enterprise agents over the next few years is not model capability. It's the environment, and the gap between it and the company the agent will actually work in.</p>
+    <h2>The disposable environment is breaking</h2>
+    <p>Since Atari, RL infrastructure has been built around the <strong>episode</strong>: start from a clean state, act until the task ends (<code>terminated</code>) or time runs out (<code>truncated</code>), score, reset. State evolves within an episode, and nothing in the math says episodes must be short. But in practice the tooling around them, from the Gym API to PPO and GRPO training loops to the standard sandbox lifecycle of spin up, run, score and tear down, assumes the environment is cheap to create and safe to throw away.</p>
+    <p>Today's agents no longer fit it. Tasks span days, and the state they build up is the point: at hour 18, the environment has warm caches, live processes and a dirty git tree, and reproducing it costs hours. Throwing that away after every rollout is like resetting a robot's entire factory floor between every grasp. And code is just the start. Passing tests in a fresh sandbox is the easy part, as our checkout fix showed; most production failures come from months of accumulated state, like drifted data, half-applied migrations, diverged config and other people changing things underneath. An agent that writes, ships and operates software has to learn in that world, and that world never resets.</p>    <p>That adds up to three shifts. Rollouts stretch from seconds to days, state becomes the thing the agent learns from, and long rollouts are too expensive to replay, so you branch them instead. Each shift breaks an assumption in the RL toolkit we inherited from Atari:</p>
+    <div class="table-wrap">
+    <table>
+    <thead>
+    <tr>
+    <th>Dimension</th>
+    <th>The Atari-era assumption</th>
+    <th>Where agents are now</th>
+    <th>What breaks</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>Rollout horizon</td>
+    <td>Seconds</td>
+    <td>Hours to days</td>
+    <td>Rollout throughput, credit assignment, timeouts, cost</td>
+    </tr>
+    <tr>
+    <td>Environment state</td>
+    <td>Disposable between episodes</td>
+    <td>A first-class learning substrate</td>
+    <td>Reset-to-zero sandboxes, reproducibility</td>
+    </tr>
+    <tr>
+    <td>Branching</td>
+    <td>Rare in LLM RL, mostly in research</td>
+    <td>Speculative fork trees</td>
+    <td>Linear rollouts that replay from scratch</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <p>It's tempting to call this an infrastructure problem: give sandboxes the right primitives and long-horizon agent RL follows. That's only a third of it. There are three separate challenges, and they're at very different stages:</p>
+    <div class="table-wrap">
+    <table>
+    <thead>
+    <tr>
+    <th>Challenge</th>
+    <th>What's missing</th>
+    <th>Where it stands</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>Compute persistence</td>
+    <td>Cheap snapshots, pause and resume, and forking of the agent's machine</td>
+    <td>An infrastructure problem with known answers</td>
+    </tr>
+    <tr>
+    <td>World reproducibility</td>
+    <td>Consistent snapshots of APIs, databases, concurrent actors and external events</td>
+    <td>A simulation problem, and mostly open</td>
+    </tr>
+    <tr>
+    <td>Learning algorithms</td>
+    <td>Credit assignment, rewards and efficient exploration across long-running, branching trajectories</td>
+    <td>Active research, with early progress</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <h3>A forkable VM is not a forkable world</h3>
+    <p>The first challenge is the easy one. VMs that fork cheaply, pause without killing processes and resume hours later are engineering, and they're necessary: without them, long-horizon agent RL stays a whiteboard idea. But they aren't sufficient. Picture our support agent halfway through the double-charge case, working across Salesforce, Slack, the billing database and the payment processor. Snapshot its VM and you've captured its processes, memory, caches and files. You haven't captured the Salesforce backend, the webhook that already fired, the refund already initiated or the colleague editing the same case. Fork it ten ways and all ten branches share one real payment processor. Resume hours later and the open connection may be dead, and the remote side won't behave as if time stood still.</p>
+    <p>That's the second challenge, and it's where the robotics playbook of modeling what you can and randomizing what you can't comes back in. The external world has to be simulated well enough that it can be snapshotted and branched alongside the agent's machine, and behave consistently with everything that already happened in each branch. <strong>The breakthrough isn't making long-running agent RL computationally feasible. It's making multiple plausible futures from the same intermediate state trainable and evaluable.</strong> The next generation of agent RL environments needs forkable worlds, not just forkable computers.</p>
+    <h3>What opens up when worlds can fork</h3>
+    <ul>
+    <li><strong>Mid-trajectory forking.</strong> At hour 18, fork the world ten ways (refund, credit, escalate) and get counterfactual credit assignment without replaying 18 hours.</li>
+    <li><strong>Long-horizon, sessionful rollouts.</strong> The environment persists across the whole task instead of being rebuilt for every step.</li>
+    <li><strong>Cross-calendar-time training.</strong> Pause while waiting on CI, a manager or a customer, release the compute, and resume when the event arrives. Training starts to follow the calendar, not just the clock.</li>
+    </ul>
+    <p>Roboticists will recognize this immediately. The real world never had a <code>reset()</code> button. Robotics has always lived with persistent, expensive, non-resettable state, and LLM agents are now arriving at the same place.</p>
+    <h3>The research questions that follow</h3>
+    <p>This is where the next wave of agent RL gets built:</p>
+    <ul>
+    <li><strong>Forkable world models</strong>: simulated services, concurrent actors and event schedules that can be snapshotted and branched consistently, seeded from real production traces and randomized so they don't overfit one company.</li>
+    <li><strong>Speculative RL algorithms</strong> that exploit fork trees, the way speculative decoding exploits cheap drafts. Early research like <a href="https://aclanthology.org/2026.acl-long.1100/">SPARK</a> (ACL 2026) already branches long-horizon agent rollouts at critical decision points. But it branches the trajectory, not the enterprise world around it; doing that against real, stateful systems is the open problem.</li>
+    <li><strong>Event-driven training</strong>, where rollouts are suspended and resumed around external events rather than run end to end.</li>
+    <li><strong>Long-horizon benchmarks</strong> that measure multi-day, stateful work rather than single-shot tasks.</li>
+    </ul>    <h2>Mind the gap</h2>
+    <p>A little race car taught me the lesson that now applies everywhere I look. A simulator's value isn't how realistic it looks, how many tasks it holds or how fast agents learn inside it. <strong>Its value is how reliably success inside it predicts success outside it.</strong> At DeepRacer, the breakthrough wasn't a better algorithm; it was an evaluation in simulation that actually predicted the real track.</p>
+    <p>So what does closing the gap look like for agents? Take the checkout incident one last time. A working Sim2Real loop has four steps:</p>
+    <ol>
+    <li><strong>Train</strong> agents on realistic payment failures and concurrent system changes: charges that succeed and then time out, settlements that lag authorizations, a colleague changing the worker config mid-deploy.</li>
+    <li><strong>Evaluate</strong> whether they resolve the issue without duplicate charges or downstream damage, not just whether the tests pass or a refund was issued.</li>
+    <li><strong>Measure</strong> how well success in simulation predicts outcomes on held-out scenarios derived from production.</li>
+    <li><strong>Feedback</strong> every failure observed in production to improve the simulator, the tasks and the verifiers.</li>
+    </ol>
+    <p>Hidden in those four steps are two different learning loops, and they're easy to confuse. In the first, <strong>the agent gets better at the simulator</strong>: its pass rate climbs. In the second, <strong>the simulator gets better at predicting production</strong>: the agreement between success in sim and success in the world climbs. Only the second tells you whether the first means anything. At DeepRacer, we had checkpoints that kept improving in simulation and still drove off the real track, and the training curve told us little about which ones would. What changed that was the second loop: an evaluation tuned against real-track runs until it predicted them. Most agent RL today runs only the first loop. The scores go up, and nobody checks whether they predict anything.</p>    <p>The teams that win the next decade won't just have the best models, or even the most environments. They'll run both loops, and they'll have the tightest one between simulation and production: measuring the transfer gap, turning every bad deploy and every mishandled ticket into a new training scenario, and closing the gap a little more each time.</p>
+    <p>That's the problem I'm working on now: building environments that don't merely teach agents to pass tests, but teach them to operate reliably in the messy, changing world they'll actually encounter. More on that soon.</p>
+
+    <hr>
+
+    <p class="companion-note">Want the robotics side in depth? <a href="sim2real-in-robotics.html">Sim2Real in Robotics</a> covers the full DeepRacer story, a short history of the reality gap from 1995 to today's humanoids, and what a robotics RL environment needs to contain.</p>
+
+</article>
+
+</body>
+</html>

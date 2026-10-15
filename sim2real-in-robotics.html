@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNCHZ7JVPC"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZNCHZ7JVPC');
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sim2Real in Robotics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --color-bg: #fcfcfc;
+            --color-text: #1a1a1a;
+            --color-text-secondary: #555;
+            --color-text-muted: #888;
+            --color-accent: #2563eb;
+            --color-accent-hover: #1d4ed8;
+            --color-border: #e5e5e5;
+            --color-code-bg: #f5f5f5;
+            --color-blockquote-border: #2563eb;
+            --color-blockquote-bg: #f8fafc;
+            --max-width: 1100px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            font-size: 18px;
+        }
+
+        body {
+            font-family: 'Source Serif 4', Georgia, 'Times New Roman', serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            line-height: 1.75;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Header / Navigation */
+        .site-header {
+            padding: 40px 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .site-header a {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--color-text-muted);
+            text-decoration: none;
+            letter-spacing: 0.02em;
+        }
+
+        .site-header a:hover {
+            color: var(--color-text);
+        }
+
+        /* Article Container */
+        .article-container {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 20px 24px 100px;
+        }
+
+        /* Article Header */
+        .article-header {
+            margin-bottom: 48px;
+            padding-bottom: 32px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        .hero-image-container {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .hero-image {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .article-header h1 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2.4rem;
+            font-weight: 700;
+            line-height: 1.2;
+            letter-spacing: -0.03em;
+            color: var(--color-text);
+            margin-bottom: 16px;
+        }
+
+        .article-subtitle {
+            font-size: 1.15rem;
+            color: var(--color-text-secondary);
+            line-height: 1.6;
+            font-style: italic;
+        }
+
+        .article-meta {
+            margin-top: 20px;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+
+        .article-meta .author {
+            color: var(--color-text-secondary);
+            font-weight: 500;
+        }
+
+        /* Typography */
+        p {
+            margin-bottom: 1.5em;
+        }
+
+        h2 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-text);
+            margin-top: 2.5em;
+            margin-bottom: 0.8em;
+            letter-spacing: -0.02em;
+            line-height: 1.3;
+        }
+
+        h3 {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-top: 2em;
+            margin-bottom: 0.6em;
+            line-height: 1.4;
+        }
+
+        a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        strong {
+            font-weight: 600;
+        }
+
+        em {
+            font-style: italic;
+        }
+
+        /* Blockquotes */
+        blockquote {
+            margin: 2em 0;
+            padding: 1.25em 1.5em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+        }
+
+        blockquote p {
+            margin: 0;
+            font-size: 1.05rem;
+            color: var(--color-text);
+        }
+
+        blockquote p strong {
+            font-weight: 700;
+        }
+
+        /* Stat callout */
+        .stat-callout {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin: 1.25em 0 1.75em;
+        }
+
+        .stat-callout-number {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            line-height: 1;
+            flex-shrink: 0;
+        }
+
+        .stat-callout-text {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            color: var(--color-text-secondary);
+            line-height: 1.4;
+        }
+
+        /* Code */
+        code {
+            font-family: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
+            font-size: 0.88em;
+            background: var(--color-code-bg);
+            padding: 0.15em 0.4em;
+            border-radius: 3px;
+            color: #c7254e;
+        }
+
+        pre {
+            background: #1e1e1e;
+            border-radius: 6px;
+            padding: 1.25em 1.5em;
+            overflow-x: auto;
+            margin: 1.75em 0;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+            color: #d4d4d4;
+            font-size: 0.85rem;
+            line-height: 1.55;
+            white-space: pre;
+        }
+
+        /* Side-by-side diagram pairs */
+        .diagram-row {
+            display: flex;
+            gap: 1.25em;
+            margin: 1.75em 0;
+        }
+
+        .diagram-row pre {
+            flex: 1 1 0;
+            margin: 0;
+        }
+
+        @media (max-width: 600px) {
+            .diagram-row {
+                flex-direction: column;
+            }
+        }
+
+        /* Collapsible prompt block */
+        .prompt-details {
+            margin: 1.75em 0;
+        }
+
+        .prompt-details pre {
+            margin-top: 12px;
+        }
+
+        .prompt-details summary {
+            cursor: pointer;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--color-accent);
+            list-style: none;
+        }
+
+        .prompt-details summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .prompt-details summary::before {
+            content: '▸ ';
+        }
+
+        .prompt-details[open] summary::before {
+            content: '▾ ';
+        }
+
+        /* Hover-labeled prompt sections */
+        .prompt-section {
+            display: block;
+            margin: 0 -1.5em;
+            padding: 1px 1.5em;
+            border-left: 3px solid transparent;
+            cursor: help;
+            transition: background 0.15s ease, border-color 0.15s ease;
+        }
+
+        .prompt-section--system:hover { background: rgba(37, 99, 235, 0.14); border-left-color: #60a5fa; }
+        .prompt-section--task:hover { background: rgba(124, 58, 237, 0.14); border-left-color: #a78bfa; }
+        .prompt-section--context:hover { background: rgba(13, 148, 136, 0.16); border-left-color: #2dd4bf; }
+        .prompt-section--examples:hover { background: rgba(180, 83, 9, 0.16); border-left-color: #f59e0b; }
+        .prompt-section--user:hover { background: rgba(220, 38, 38, 0.14); border-left-color: #f87171; }
+
+        /* Lists */
+        ul, ol {
+            margin: 1.5em 0;
+            padding-left: 1.5em;
+        }
+
+        li {
+            margin-bottom: 0.5em;
+            padding-left: 0.25em;
+        }
+
+        li::marker {
+            color: var(--color-text-muted);
+        }
+
+        /* Horizontal Rule */
+        hr {
+            border: none;
+            border-top: 1px solid var(--color-border);
+            margin: 3em 0;
+        }
+
+        /* Tables */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 1.75em 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+
+        th, td {
+            text-align: left;
+            vertical-align: top;
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--color-border);
+        }
+
+        th {
+            font-weight: 600;
+            color: var(--color-text);
+            border-bottom: 2px solid var(--color-text);
+        }
+
+        td:first-child {
+            font-weight: 500;
+        }
+
+        /* Companion note */
+        .companion-note {
+            font-family: 'Inter', -apple-system, sans-serif;
+            font-size: 0.9rem;
+            color: var(--color-text-secondary);
+            padding: 1em 1.25em;
+            background: var(--color-blockquote-bg);
+            border-left: 4px solid var(--color-blockquote-border);
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 2em;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            html {
+                font-size: 16px;
+            }
+
+            .article-header h1 {
+                font-size: 1.8rem;
+            }
+
+            .article-container {
+                padding: 16px 16px 60px;
+            }
+
+            pre code {
+                font-size: 0.78rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<header class="site-header">
+    <a href="index.html">&larr; Back</a>
+</header>
+
+<article class="article-container">
+
+    <header class="article-header">
+        <h1>Sim2Real in Robotics</h1>
+        <p class="article-subtitle">DeepRacer in depth, a short history of the reality gap, and what a robotics RL environment needs to contain.</p>
+        <div class="article-meta">
+            <span class="author">Sunil Mallya</span> &middot; October 2026
+        </div>
+    </header>
+
+    <p class="companion-note">A companion to <a href="sim2real-gap-ai-agents.html">The Sim2Real Gap Is Coming for AI Agents</a>. That post argues agents are walking into the problem robotics has fought for decades; this one is the robotics side of the story.</p>
+
+    <h2 id="deepracer">DeepRacer, in depth</h2>
+    <p>The full story behind the DeepRacer section of <a href="sim2real-gap-ai-agents.html">The Sim2Real Gap Is Coming for AI Agents</a>, drawn from our <a href="https://arxiv.org/abs/1911.01562">2019 paper</a>.</p>
+    <h3>What Sim2Real looked like in 2017</h3>
+    <p>It's easy to forget how immature the field was. Deep RL's greatest hits were Atari and MuJoCo benchmarks. Domain randomization had only just been formalized in research. Simulators were CPU-bound, so you ran a handful of environments, not thousands. The prevailing view in robotics was that sim-trained policies were a curiosity, and that anything serious required real-world data.</p>
+    <p>We didn't have the luxury of that view. We were shipping a product, so the gap had to close for people who would never read a paper about it.</p>
+    <h3>How DeepRacer solved Sim2Real</h3>
+    <p>Most of the work went into modeling reality, and designing that environment took months and a team of experts across robotics, simulation and RL. We built the tracks and surroundings in Blender, imported them into Gazebo, and simulated the car with the ODE physics engine, including collisions, friction and acceleration, from a URDF model matched to the measured chassis, wheels and Ackermann steering. We calibrated the simulated camera's height, angle and field of view against real images, locked the simulation to the real camera's 15 fps with one action per frame, and mapped each discrete action to motor commands by measuring real steering angles and speeds. We then built a physical replica track identical in color, shape and dimensions to one in simulation, and ran controlled experiments on it and on a duct-tape track in our office corridor: with and without barriers, in bright sunlight and at different speeds. Where we couldn't model reality, we synthesized variation instead, with up to 10% random noise on steering and throttle, reversed direction of travel, randomized starting points, and image augmentations like random color, translation, shadows and salt-and-pepper noise, spread across distributed rollout workers that each ran their own randomized world. The payoff: at 0.5 m/s, a policy trained for under five minutes transferred to the real track, and our best model ran consistent 11-second laps at 1.6 m/s from a single grayscale camera.</p>
+    <h3>What the gap actually looked like</h3>
+    <p>The failure modes were humbling, and they taught me more than the successes.</p>
+    <ul>
+    <li><strong>Perception gap.</strong> Real tracks came with glare, sunlight and backgrounds full of clutter and people. We tested on the replica with and without barriers, in bright sunlight, and on a duct-tape track in our office corridor that crossed both carpet and concrete. <em>The agent version:</em> production logs, dashboards and UIs never look like the clean ones in your environment.</li>
+    <li><strong>Dynamics gap.</strong> Speed in sim was idealized. On the real car, battery level changed speed over a session, and holding a constant speed was hard as the policy switched throttle levels. Simulated laps took about 35 seconds; we tested on the real track at roughly double that speed. <em>The agent version:</em> real APIs rate-limit, time out and change behavior between versions.</li>
+    <li><strong>Reward gap.</strong> Our default reward paid the car to stay near the center line, because near the edge a small deviation loses sight of the track. Thousands of users wrote their own rewards, the verifiers of their day, and policies learned whatever the reward actually paid for, which wasn't always fast, clean driving. <em>The agent version:</em> reward hacking against unit tests and LLM judges.</li>
+    <li><strong>Overfitting to the sim.</strong> Policies both underfit and overfit the simulator during training. A checkpoint that looked great on a fixed simulated lap could fail on the real track, and the training curve told you little about which. <em>The agent version:</em> benchmark scores that climb while production performance doesn't.</li>
+    </ul>
+    <h3>What closed it</h3>
+    <p>We trained policies with increasing levels of randomization and tested each on the real track. Every finding has a direct analog for agents.</p>
+    <ul>
+    <li><strong>Robust evaluation predicts the real world.</strong> Evaluating checkpoints in sim with action noise, multiple starting points and both directions of travel told us which would transfer. A run of consecutive good checkpoints was the strongest signal. That let us decide when to stop training and tune hyperparameters without living on the real track. <em>For agents:</em> the eval that matters is the one that predicts production, and most agent evals today are never checked against it.</li>
+    <li><strong>Reversing direction every episode was the biggest single win.</strong> Up to 10% action noise didn't help on its own, but it did combined with reversing. <em>For agents:</em> randomize the obvious symmetries first; cheap structural perturbations, like reordered tools, renamed fields and shuffled steps, can beat elaborate simulation.</li>
+    <li><strong>Random color was the most effective image augmentation</strong>, ahead of translation, shadows, sharpening and salt-and-pepper noise. <em>For agents:</em> vary how the world presents itself, its formats, phrasing and layouts, not just what it does.</li>
+    <li><strong>Regularize the policy.</strong> Dropout of 0.3 and a lower entropy bonus (0.001 instead of 0.1) improved transfer. <em>For agents:</em> a policy that memorizes one environment's quirks won't survive the next one.</li>
+    <li><strong>Training faster made the policy sturdier.</strong> A higher maximum throttle in training dramatically improved robustness, at the cost of slower convergence. <em>For agents:</em> train against environments that are flakier, slower and more adversarial than production.</li>
+    <li><strong>Mixing tracks didn't help.</strong> Training on several tracks at once did not improve transfer. <em>For agents:</em> piling on environments is not the same as covering the gap.</li>
+    </ul>
+    <p>The deeper lesson stuck with me. <strong>The gap is not a bug you fix once. It is the product.</strong> Evaluation in simulation is only worth something if it predicts reality, and building that predictor is most of the work. Whoever builds the best bridge across the gap wins.</p>
+    <h2 id="history">A short history of Sim2Real in robotics</h2>
+    <p><a href="sim2real-gap-ai-agents.html">The main post</a> leans on lessons from robotics. This is the longer story behind them, and <a href="#environments">the next section</a> covers what robotics RL environments look like in practice.</p>
+    <h3>Before 2017: make the sim match reality</h3>
+    <p>The reality gap was named long before deep learning. In 1995, Jakobi, Husbands and Harvey showed in evolutionary robotics that controllers evolved in simulation transfer only if you inject the right noise, and that a simulator can be deliberately minimal as long as it's noisy in the right places. The pre-deep-learning toolkit looked like this:</p>
+    <ul>
+    <li><strong>System identification and calibration.</strong> Measure the real robot and fit the simulator's parameters to it. This was, and still is, the first thing any serious team does.</li>
+    <li><strong>Learn the simulator from real data.</strong> Andrew Ng and Pieter Abbeel's autonomous helicopter work in the 2000s learned a dynamics model from real flight logs, trained policies inside that learned model, and flew the real aircraft, eventually through aerobatic maneuvers.</li>
+    <li><strong>Noise injection.</strong> Perturb sensors and actuators in sim so the policy can't lean on any one exact value.</li>
+    <li><strong>Model ensembles and robust control.</strong> Optimize against a family of plausible models rather than one. Ensemble-CIO (2015) planned full-body motions that transferred to a physical humanoid this way, and EPOpt (2016) brought the idea to neural network policies.</li>
+    <li><strong>Synthetic data for perception.</strong> ALVINN, the late-1980s neural network that steered a Carnegie Mellon van, was trained in part on simulated road images.</li>
+    <li><strong>Transfer and fine-tuning.</strong> Progressive networks (2016) reused features learned in sim and adapted them with a little real experience.</li>
+    </ul>
+    <p>At the end of 2016, CAD2RL flew a real quadcopter indoors with a policy trained only on heavily randomized rendered images. It was a preview of what came next.</p>
+    <h3>2017 onward: make reality one more sample of the sim, then scale it</h3>
+    <p>Deep RL, cheap compute and randomization at scale changed the game. Instead of making the simulator exactly right, the field learned to make it wide enough that reality falls inside it.</p>
+    <div class="table-wrap">
+    <table>
+    <thead>
+    <tr>
+    <th>Year</th>
+    <th>Milestone</th>
+    <th>What it proved</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>2017</td>
+    <td>Domain randomization (Tobin et al.)</td>
+    <td>Randomize textures, lighting and cameras enough and the real world looks like one more sample</td>
+    </tr>
+    <tr>
+    <td>2018</td>
+    <td>Dynamics randomization (Peng et al.) and Minitaur locomotion (Tan et al.)</td>
+    <td>Randomizing physics, not just pixels, transfers agile control to real robots</td>
+    </tr>
+    <tr>
+    <td>2018</td>
+    <td>Sim-to-real grasping with domain adaptation (GraspGAN)</td>
+    <td>Learned image translation can close the visual gap and cut the real data needed</td>
+    </tr>
+    <tr>
+    <td>2018</td>
+    <td>AWS DeepRacer</td>
+    <td>Model-free, sim-only RL transfers at the scale of thousands of non-expert users</td>
+    </tr>
+    <tr>
+    <td>2018–2019</td>
+    <td>OpenAI Dactyl and the Rubik's Cube hand</td>
+    <td>Automatic, ever-widening randomization can transfer dexterous in-hand manipulation</td>
+    </tr>
+    <tr>
+    <td>2019</td>
+    <td>Closing the sim-to-real loop (SimOpt)</td>
+    <td>Real rollouts can tune the randomization ranges themselves</td>
+    </tr>
+    <tr>
+    <td>2019–2022</td>
+    <td>ANYmal locomotion (ETH Zurich)</td>
+    <td>Learned actuator models plus teacher-student training give robust blind, then perceptive, legged locomotion</td>
+    </tr>
+    <tr>
+    <td>2021</td>
+    <td>Isaac Gym and massively parallel GPU sim</td>
+    <td>Thousands of environments on one GPU; a quadruped learns to walk in minutes</td>
+    </tr>
+    <tr>
+    <td>2021</td>
+    <td>Rapid Motor Adaptation (RMA)</td>
+    <td>A policy can infer the real world's parameters online and adapt in a fraction of a second</td>
+    </tr>
+    <tr>
+    <td>2022</td>
+    <td>DeXtreme (NVIDIA)</td>
+    <td>GPU-scale randomization brings Dactyl-style dexterity to a commercially available hand</td>
+    </tr>
+    <tr>
+    <td>2023</td>
+    <td>Swift drone racing (UZH)</td>
+    <td>A sim-trained policy, corrected with residual models fit to real data, beats human world champions</td>
+    </tr>
+    <tr>
+    <td>2023–2024</td>
+    <td>LLM-written rewards and randomization (Eureka, DrEureka)</td>
+    <td>The reward and randomization design DeepRacer users did by hand can be automated</td>
+    </tr>
+    <tr>
+    <td>2024–2026</td>
+    <td>Humanoid locomotion at scale</td>
+    <td>Sim-trained whole-body control ships on commercial humanoids</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <p>Put the eras together and the modern recipe has six parts:</p>
+    <ol>
+    <li><strong>Randomize what you can't model.</strong> Friction, mass, latency, sensor noise, lighting. Make the real world just another draw from the training distribution.</li>
+    <li><strong>Model what you can.</strong> Calibrate the twin, and learn the hard-to-simulate parts, like actuator dynamics or residual errors, from real data and drop them back into the sim. Real-to-sim is half of Sim2Real.</li>
+    <li><strong>Cheat in sim, then distill.</strong> Train a teacher with privileged information only the simulator knows, then distill it into a student that sees only what the real robot sees.</li>
+    <li><strong>Adapt online.</strong> Let the policy estimate the world it's in from its recent history, so system identification happens at runtime, not just in the lab.</li>
+    <li><strong>Evaluate for transfer.</strong> Select policies with evaluations that predict the real world, as DeepRacer's robust evaluation did, and feed real rollouts back to tune the sim, as SimOpt did.</li>
+    <li><strong>Scale the sim, not the robot.</strong> GPU-parallel simulation turned weeks of experience into hours of wall clock.</li>
+    </ol>
+    <p>But notice where the wins are. Sim2Real for locomotion is comparatively mature, though robustness, generalization and whole-body control on humanoids are still active research. <strong>Dexterous manipulation is harder.</strong> Contact-rich interaction, deformable objects, friction at fingertips and tactile sensing remain hard to simulate faithfully, which is why much recent manipulation progress has come from teleoperated real-world data and vision-language-action models. Simulation isn't out of the race: in 2025, <a href="https://proceedings.mlr.press/v305/lin25c.html">Lin et al.</a> showed vision-based Sim2Real RL for bimanual humanoid manipulation, built on automated real-to-sim tuning. Still, the gap for manipulation is the open frontier, and <a href="#environments">The next section</a> picks it up.</p>
+    <h2 id="environments">What a robotics RL environment needs to contain</h2>
+    <p>They have the same ingredients as LLM RL environments: an environment, a task and a verifier. In robotics, the environment is a simulated robot in a scene. The task is a goal like "stack the cups" or "fold the towel." The verifier is a success predicate the simulator can check, ideally backed by real-world evaluation.</p>
+    <p>What a lab buys depends on what it already has:</p>
+    <div class="table-wrap">
+    <table>
+    <thead>
+    <tr>
+    <th>If the lab...</th>
+    <th>It's buying</th>
+    <th>What that looks like</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+    <td>Already has its robot's digital twin and a sim stack</td>
+    <td><strong>Content</strong></td>
+    <td>Scenes, assets, tasks and verifiers, packaged in a format that plugs straight into their stack</td>
+    </tr>
+    <tr>
+    <td>Doesn't have a twin or sim stack</td>
+    <td><strong>A platform</strong></td>
+    <td>The robot model, scenes and the infrastructure to simulate, train and evaluate at scale</td>
+    </tr>
+    </tbody>
+    </table>
+    </div>
+    <p>The content business looks like the LLM environment business: breadth, quality and diversity of tasks, with verifiers you can trust. The platform business looks like infrastructure: fidelity, throughput and integration.</p>
+    <p>Either way, the hard part is the same one flagged above: <strong>the Sim2Real gap for dexterous manipulation.</strong> Anyone can sell a scene. Selling a scene where a policy that learns to grasp, insert or fold in sim actually does it on a real robot is a different problem entirely.</p>
+    <p>There's a bigger business question underneath this. Robotics data will likely become a massive market, and a more defensible one than web data, because producing it takes physical infrastructure: robots, operators, environments, sensing, teleoperation, safety procedures and failure recovery all have to come together. But owning a scarce input doesn't automatically mean capturing the economics of the industry that consumes it, so the winner could build a multibillion-dollar company without that company being a pure data provider.</p>
+
+</article>
+
+</body>
+</html>
