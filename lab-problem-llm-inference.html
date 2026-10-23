@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZNCHZ7JVPC"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZNCHZ7JVPC');
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Failover keeps the API up. It doesn’t keep behavior the same. LAB: a CAP-like tradeoff between latency, availability and behavior in production LLM inference.">
+<title>The LAB Problem: A CAP-Like Tradeoff in LLM Inference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{color-scheme:light;--paper:#F2F4F7;--surface:#E6EAF0;--ink:#172033;--ink2:#4C5669;--rule:#CDD4DF;--l:#2D55C8;--a:#0B7A5E;--b:#B8342A;--serif:"Source Serif 4",Georgia,"Times New Roman",serif;--sans:"Inter",-apple-system,"Segoe UI",Arial,sans-serif}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--paper:#121722;--surface:#1B2231;--ink:#E4E8F0;--ink2:#A2ABBC;--rule:#2E3748;--l:#7C9BF2;--a:#4CC4A0;--b:#F07A6E}}
+:root[data-theme="dark"]{color-scheme:dark;--paper:#121722;--surface:#1B2231;--ink:#E4E8F0;--ink2:#A2ABBC;--rule:#2E3748;--l:#7C9BF2;--a:#4CC4A0;--b:#F07A6E}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font:400 1.1rem/1.75 var(--serif);-webkit-font-smoothing:antialiased}
+main{max-width:54rem;margin:0 auto;padding:1.5rem 1.25rem 5.5rem}
+.site-header{max-width:54rem;margin:0 auto;padding:2.2rem 1.25rem 0}
+.site-header a{font:500 .85rem var(--sans);color:var(--ink2);text-decoration:none;letter-spacing:.02em}
+.site-header a:hover{color:var(--ink)}
+.date .author{color:var(--ink);font-weight:500}
+h1,h2,h3,.dek,.date,figcaption,.small,.sources{font-family:var(--sans)}
+h1{font-size:clamp(2.2rem,6vw,3.1rem);letter-spacing:-.035em;line-height:1.07;margin:0 0 1rem;font-weight:700}
+h2{font-size:1.45rem;line-height:1.3;font-weight:700;letter-spacing:-.016em;margin:3rem 0 .9rem}
+p{margin:0 0 1.1rem}
+.dek{color:var(--ink2);font-size:1.25rem;line-height:1.46;margin:0 0 .8rem}
+.date{font-size:.9rem;color:var(--ink2);margin:0 0 2.25rem}
+a{color:var(--l);text-underline-offset:.15em}
+a:hover{text-decoration-thickness:2px}
+a:focus-visible{outline:2px solid var(--l);outline-offset:2px}
+strong{font-weight:600}
+.thesis{border-left:4px solid var(--l);padding:.6rem 0 .6rem 1.2rem;margin:1.6rem 0 1.8rem;font-size:1.2rem;line-height:1.55;font-weight:600}
+.statement{font-family:var(--sans);font-size:clamp(1.45rem,3.6vw,1.75rem);line-height:1.32;font-weight:700;letter-spacing:-.018em;margin:0 0 1.2rem}
+.lede{font-size:1.2rem;line-height:1.65}
+.kicker{font-family:var(--sans);font-size:1.35rem;line-height:1.4;font-weight:700;letter-spacing:-.01em;margin:1.4rem 0 1.6rem}
+.challenges{list-style:none;margin:1.2rem 0 1.8rem;padding:.2rem 1.3rem;background:var(--surface);border-radius:10px}
+.challenges li{padding:.85rem 0;border-top:1px solid var(--rule);line-height:1.6}
+.challenges li:first-child{border-top:0}
+.challenges strong{display:block;font-family:var(--sans);font-weight:700;font-size:1.02rem;margin-bottom:.1rem}
+
+.defs{margin:1.4rem 0 1rem;padding:0}
+.defs>div{display:grid;grid-template-columns:2.6rem 1fr;column-gap:1rem;row-gap:.1rem;margin-bottom:1.3rem}
+.defs dt{font-family:var(--sans);grid-row:span 2;display:grid;place-items:center;width:2.6rem;height:2.6rem;border-radius:50%;font-size:1.18rem;font-weight:700;color:#fff}
+.defs dt.l{background:#2D55C8}.defs dt.a{background:#0B7A5E}.defs dt.b{background:#B8342A}
+.defs .term{font-family:var(--sans);font-size:1.02rem;line-height:1.45;font-weight:700}
+.defs dd{margin:0}
+.small{color:var(--ink2);font-size:.95rem;line-height:1.6}
+
+figure{margin:2rem 0 1.6rem}
+figure.hero{margin:0 0 2.4rem}
+.venn{display:block;width:100%;max-width:470px;height:auto;margin:0 auto}
+.venn .lbl{font-family:var(--sans);font-weight:700;font-size:20px;fill:var(--ink)}
+.venn .pair{font-family:var(--sans);font-weight:700;font-size:18px;fill:var(--ink)}
+.venn .how{font-family:var(--sans);font-weight:500;font-size:14px;fill:var(--ink2)}
+figcaption{color:var(--ink2);font-size:.9rem;line-height:1.55;margin:.8rem 0 0}
+
+.tree{padding:1.3rem;border:1px solid var(--rule);border-radius:10px;background:var(--surface);font-family:var(--sans)}
+.tree-q{position:relative;max-width:24rem;margin:0 auto;text-align:center;font-weight:700;font-size:1.05rem;line-height:1.4;padding:.75rem 1rem;border:2px solid var(--ink);border-radius:8px;background:var(--paper)}
+.tree-q::after{content:"";position:absolute;left:50%;bottom:-18px;height:16px;border-left:2px solid var(--ink2)}
+.tree-branches{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:18px;padding-top:16px}
+.tree-branches::before{content:"";position:absolute;top:0;left:calc((100% - 1rem)/4);right:calc((100% - 1rem)/4);border-top:2px solid var(--ink2)}
+.branch{position:relative;padding:.9rem;border:1px solid var(--rule);border-radius:8px;background:var(--paper)}
+.branch::before{content:"";position:absolute;top:-17px;left:50%;height:16px;border-left:2px solid var(--ink2)}
+.branch-head{font-weight:700;font-size:.98rem;line-height:1.35}
+.ans{display:inline-block;font-size:.8rem;font-weight:700;padding:.05rem .45rem;border-radius:4px;margin-right:.45rem;color:#fff}
+.ans.no{background:#B8342A}.ans.yes{background:#0B7A5E}
+.branch-trade{color:var(--ink2);font-size:.92rem;margin:.25rem 0 .7rem}
+.opt{border-top:1px solid var(--rule);padding:.6rem 0 .1rem}
+.opt-name{font-weight:700;font-size:.95rem;margin-bottom:.15rem}
+.checks{list-style:none;margin:0;padding:0;font:.92rem/1.55 var(--sans)}
+.checks .good{color:var(--a)}.checks .bad{color:var(--b)}
+.tree-band{margin-top:1rem;text-align:center;font-weight:600;font-size:.95rem;padding:.6rem .8rem;border:1.5px dashed var(--ink2);border-radius:8px;color:var(--ink)}
+
+.rule{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);margin:1.5rem 0;padding:1rem .1rem}
+.rule p:last-child{margin:0}
+.rule strong{font-family:var(--sans)}
+
+.workflow{margin:1.4rem 0 1.6rem;padding:1.2rem 1.25rem;border:1px solid var(--rule);border-radius:9px}
+.workflow .rowx{display:flex;justify-content:space-between;align-items:center;gap:.35rem}
+.workflow .unit{font-family:var(--sans);border:1px solid var(--rule);border-radius:7px;flex:1;padding:.7rem .5rem;text-align:center;font-size:.92rem;font-weight:700;line-height:1.35;background:var(--surface)}
+.workflow .special{border-color:var(--l)}
+.workflow .to{font-family:var(--sans);color:var(--ink2);font-size:1.15rem}
+.workflow .caption{font:.9rem/1.5 var(--sans);color:var(--ink2);margin:.75rem 0 0}
+
+ul.plain,ol.list{margin:.4rem 0 1.4rem;padding-left:1.35rem}
+ul.plain li,ol.list li{padding-left:.2rem;margin-bottom:.65rem}
+.closing{font-family:var(--sans);font-size:1.2rem;line-height:1.5;font-weight:700;margin:2.6rem 0 0}
+
+.sources{border-top:1px solid var(--rule);margin-top:3rem;padding-top:1.25rem;color:var(--ink2);font-size:.88rem;line-height:1.6}
+.sources h2{font-size:1rem;margin:0 0 .65rem}
+.sources ol{padding-left:1.25rem;margin:0}
+.sources li{margin-bottom:.45rem}
+.sources a{overflow-wrap:anywhere}
+
+.positions{margin:.6rem 0 1.4rem}
+.positions>div{display:grid;grid-template-columns:3.2rem 1fr;column-gap:.9rem;padding:.75rem 0;border-top:1px solid var(--rule)}
+.positions>div:last-child{border-bottom:1px solid var(--rule)}
+.positions .tag{font:700 1rem/1.6 var(--sans)}
+.positions .tag.lb{color:var(--l)}.positions .tag.ab{color:var(--a)}.positions .tag.la{color:var(--b)}
+.positions p{margin:0}
+.positions strong{font-family:var(--sans)}
+h3.mode{font-size:1.12rem;font-weight:700;margin:2rem 0 .5rem}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:1.2rem 0 1.6rem}
+table.lab{border-collapse:collapse;width:100%;min-width:560px;font:.92rem/1.5 var(--sans)}
+table.lab th,table.lab td{text-align:left;vertical-align:top;padding:.65rem .7rem;border-bottom:1px solid var(--rule)}
+table.lab th{font-weight:700;border-bottom:2px solid var(--ink2)}
+table.lab td:first-child{font-weight:700}
+table.lab .pos{font-weight:700;white-space:nowrap}
+
+@media(max-width:580px){
+  body{font-size:1.05rem}
+  main{padding:2rem 1.1rem 4rem}
+  .tree{padding:1rem}
+  .tree-branches{grid-template-columns:1fr;padding-top:0}
+  .tree-branches::before,.branch::before{display:none}
+  .workflow .rowx{flex-direction:column}
+  .workflow .unit{width:100%}
+  .workflow .to{transform:rotate(90deg)}
+}
+</style>
+</head>
+<body>
+<header class="site-header"><a href="index.html">&larr; Back</a></header>
+<main><article>
+<h1>The LAB Problem: A <span style="white-space:nowrap">CAP-Like</span> Tradeoff in LLM Inference</h1>
+<p class="dek">Failover keeps the API up. It doesn’t keep behavior the same.</p>
+<p class="date"><span class="author">Sunil Mallya</span> &middot; October 2026</p>
+<figure class="hero">
+<svg class="venn" viewBox="0 0 520 450" role="img" aria-labelledby="venn-t venn-d">
+<title id="venn-t">The LAB tradeoff</title>
+<desc id="venn-d">Three overlapping circles: Behavior at the top, Latency at bottom left, Availability at bottom right. Behavior and Latency overlap in No fallback. Behavior and Availability overlap in Wait it out. Latency and Availability overlap in Reroute.</desc>
+<circle cx="260" cy="165" r="135" style="fill:var(--b);fill-opacity:.15;stroke:var(--b);stroke-width:2"/>
+<circle cx="185" cy="295" r="135" style="fill:var(--l);fill-opacity:.15;stroke:var(--l);stroke-width:2"/>
+<circle cx="335" cy="295" r="135" style="fill:var(--a);fill-opacity:.15;stroke:var(--a);stroke-width:2"/>
+<text class="lbl" x="260" y="92" text-anchor="middle">Behavior</text>
+<text class="lbl" x="118" y="350" text-anchor="middle">Latency</text>
+<text class="lbl" x="402" y="350" text-anchor="middle">Availability</text>
+<text class="pair" x="180" y="204" text-anchor="middle">LB</text>
+<text class="how" x="180" y="224" text-anchor="middle">No fallback</text>
+<text class="pair" x="340" y="204" text-anchor="middle">AB</text>
+<text class="how" x="340" y="224" text-anchor="middle">Wait it out</text>
+<text class="pair" x="260" y="338" text-anchor="middle">LA</text>
+<text class="how" x="260" y="358" text-anchor="middle">Reroute</text>
+</svg>
+<figcaption>Each overlap is a design position, and each one gives up the property outside it. The center needs a tested backup that behaves the same, covered below.</figcaption>
+</figure>
+
+<p class="statement">In a high-scale LLM inference system, you can’t guarantee fast answers, constant availability and consistent behavior at the same time. One of them has to give.</p>
+<p class="lede">I call this the <strong>LAB problem</strong>: Latency, Availability, Behavior. It’s modeled on the CAP theorem, which says a distributed data store can’t guarantee both consistency and availability when a network partition cuts its nodes off. LAB borrows that shape, not the math. Every production system already decides which property gives way. Most decide by accident.</p>
+<p>Here’s what deciding by accident looks like. At 2:14 p.m., your primary model starts returning rate-limit errors. Within seconds, your router shifts traffic to a backup. Errors stop, latency stays green, and on-call closes the alert. Three days later, someone notices the risk agent has been approving transactions it used to escalate.</p>
+<p class="kicker">The service never went down. But the router traded behavior for availability, and nobody chose that.</p>
+<p>The router did exactly what it was built to do: keep requests flowing. But restoring service is not the same as restoring behavior. At production scale, six everyday pressures expose that gap:</p>
+<ul class="challenges">
+<li><strong>Tail latency is unpredictable.</strong> A <a href="https://trustedrouter.com/benchmarks/reports/2026-07">July 2026 benchmark</a> covering 353 models across 44 inference providers found that time to first token jumped from 4.9 seconds at the median to 17.3 seconds at p95, a 3.5× increase. Even healthy inference APIs can blow past latency budgets.</li>
+<li><strong>Provider failures are routine, and backups aren’t immune.</strong> A <a href="https://devtoollab.com/blog/llm-api-outages">90-day analysis of 2026 incidents</a> found 20 OpenAI API incidents spanning 72.7 hours and 60 Anthropic API incidents spanning 76.5 hours. These were periods of reported degradation, not necessarily complete outages. The two providers’ incident windows overlapped for just 36 minutes, making multi-provider failover valuable but not foolproof.</li>
+<li><strong>The same model isn’t the same service everywhere.</strong> Providers differ in latency, throughput, context limits, pricing and reliability, even when serving nominally identical open-weight models. A <a href="https://arxiv.org/abs/2605.02821">2026 measurement study</a> found that routing decisions must account for the provider, model, task and time, not just the model name.</li>
+<li><strong>Prompts aren’t portable contracts.</strong> A prompt tuned for GPT may produce different decisions, tool calls or output formats on Claude. Switching models often requires switching prompts, parameters and validation rules to preserve expected behavior.</li>
+<li><strong>Routers solve reachability, not behavioral equivalence.</strong> <a href="https://openrouter.ai/docs/guides/routing/model-fallbacks">OpenRouter’s standard model fallback</a> retries the request against another model. It doesn’t automatically substitute a model-specific, optimized prompt. The request may succeed while the application’s behavioral contract breaks.</li>
+<li><strong>Model behavior can drift without a failover.</strong> Providers upgrade and retire models, while differences in serving stacks, precision and inference configurations can affect reproducibility. Even an unchanged model name doesn’t guarantee identical behavior over time.</li>
+</ul>
+<p>What’s missing is <strong>behavior-aware routing</strong>. When a request moves to another model, the system should do more than rewrite the destination. It should select the appropriate prompt, parameters and validation rules, then verify that the response still meets the application’s behavioral contract.</p>
+<p class="thesis">A router can keep the API available. It cannot, by itself, keep the application’s behavior dependable.</p>
+<p>LAB makes the tradeoff explicit. For each workload, you choose which property gives way, and you design for it.</p>
+
+<h2>The three properties</h2>
+<dl class="defs">
+<div><dt class="l" aria-hidden="true">L</dt><dd class="term">Latency: answers arrive on time</dd><dd>A useful response arrives within the task’s deadline. A fast error doesn’t count. Cost usually travels with latency: the faster model is often the cheaper one.</dd></div>
+<div><dt class="a" aria-hidden="true">A</dt><dd class="term">Availability: work keeps getting done</dd><dd>Requests still complete when the primary model fails or slows down, even if some finish late.</dd></div>
+<div><dt class="b" aria-hidden="true">B</dt><dd class="term">Behavior: output keeps the behavioral contract</dd><dd>Responses meet the application’s required formats, decisions, escalation rules, tool calls and safety limits. That means keeping the contract, not copying every answer the primary gives.</dd></div>
+</dl>
+<p class="small"><strong>Why separate latency from availability?</strong> A chat reply that arrives a minute late is useless. A nightly batch job that finishes an hour late is fine. In strictly real-time APIs, the two overlap.</p>
+
+<h2>Pick a position, per workload</h2>
+<p>Each overlap in the diagram at the top is a position you can pick:</p>
+<div class="positions">
+<div><span class="tag lb">LB</span><p><strong>No fallback.</strong> One tested model, no rerouting. Fast and correct, until it fails or slows down.</p></div>
+<div><span class="tag ab">AB</span><p><strong>Wait it out.</strong> Queue or retry on the tested model. Behavior holds; deadlines slip.</p></div>
+<div><span class="tag la">LA</span><p><strong>Reroute.</strong> Send work to whichever model is reachable, faster or cheaper. Service holds; behavior can drift.</p></div>
+</div>
+
+<h2>The choice shows up in two modes</h2>
+<p>CAP only describes failures. Daniel Abadi’s <a href="https://cs.umd.edu/~abadi/papers/abadi-pacelc.pdf">PACELC</a> extended it to normal operation: even with no partition, distributed data stores trade latency against consistency. LAB follows the same pattern, under stress and in normal operation. A rate limit isn’t a network partition, and matching behavior isn’t data consistency, but the design decision has the same shape.</p>
+<figure>
+<div class="tree" role="img" aria-label="Decision tree. Can the tested model answer in time? If no, because the model is down, throttled or slow, the tradeoff is availability versus behavior: waiting keeps behavior but misses the deadline, rerouting answers on time but puts behavior at risk. If yes, in normal operation, the tradeoff is latency and cost versus behavior: staying on the tested model keeps behavior but is slower and costs more, routing to a cheaper or faster model saves time and money but puts behavior at risk. In both branches, behavior drifts unless you retest.">
+<div class="tree-q">Can the tested model answer in time?</div>
+<div class="tree-branches">
+<div class="branch">
+<div class="branch-head"><span class="ans no">No</span>Down, throttled or slow</div>
+<div class="branch-trade">Availability vs. behavior</div>
+<div class="opt"><div class="opt-name">Wait it out</div><ul class="checks"><li class="good">✓ Behavior holds</li><li class="bad">✗ Misses the deadline</li></ul></div>
+<div class="opt"><div class="opt-name">Reroute to a backup</div><ul class="checks"><li class="good">✓ Answers on time</li><li class="bad">✗ Behavior at risk</li></ul></div>
+</div>
+<div class="branch">
+<div class="branch-head"><span class="ans yes">Yes</span>Normal operation</div>
+<div class="branch-trade">Latency and cost vs. behavior</div>
+<div class="opt"><div class="opt-name">Stay on the tested model</div><ul class="checks"><li class="good">✓ Behavior holds</li><li class="bad">✗ Slower and costs more</li></ul></div>
+<div class="opt"><div class="opt-name">Route to a cheaper model</div><ul class="checks"><li class="good">✓ Faster and cheaper</li><li class="bad">✗ Behavior at risk</li></ul></div>
+</div>
+</div>
+<div class="tree-band">In both branches, behavior drifts unless you retest.</div>
+</div>
+<figcaption>Behavior is at risk in every path except staying on a tested, unchanged model.</figcaption>
+</figure>
+
+<h3 class="mode">Under stress: availability vs. behavior</h3>
+<p>Say your primary model is down for 20 minutes, your deadline is 10 seconds, and a new request arrives. You can wait for the tested model and miss the deadline, or reroute to a backup that hasn’t been tested on this task and risk its behavior. Refusing instead of guessing is a stricter version of waiting: it protects behavior, but no useful work gets done right now.</p>
+<div class="rule"><p><strong>The hard limit.</strong> If the tested model can’t answer before the deadline, and no tested backup can either, you can’t guarantee both an on-time answer and correct behavior. The backup might get it right. You just can’t promise it.</p></div>
+
+<h3 class="mode">Normal operation: latency and cost vs. behavior</h3>
+<p>Nothing is down, but you route simple requests to a smaller, faster model to save money and time. That’s the same switch as a failover, made on purpose. If the smaller model hasn’t been tested on that workload, you’ve traded behavior for speed without noticing.</p>
+<p>This is a tradeoff, not a hard limit: a cheaper model might behave the same. You only know after testing it.</p>
+
+<h3 class="mode">All the time: behavior drifts</h3>
+<p>Even if you never switch models, behavior moves under you:</p>
+<ul class="plain">
+<li>Versions get retired, and aliases like “latest” move to new models.</li>
+<li>The same open-weights model can be served at different precision or on different software, which can change answers on edge cases.</li>
+<li>Identical requests don’t always return identical outputs, even with fixed settings.</li>
+</ul>
+<p>Running copies of the same model on several providers helps: a tested, equivalent copy is how you reach the center of the diagram. But copies only push the problem back. An account-wide limit or a shared capacity shortage can hit all of them, and each copy still drifts.</p>
+
+<h2>Choosing positions at scale</h2>
+<p>A high-scale system doesn’t pick one position. It runs many workloads, and each needs its own:</p>
+<div class="table-wrap">
+<table class="lab">
+<thead><tr><th>Workload</th><th>Position</th><th>Gives way</th><th>Under stress</th><th>Normal operation</th></tr></thead>
+<tbody>
+<tr><td>Payment risk decisions</td><td class="pos">AB</td><td>Latency</td><td>Queue on the tested model, or refuse</td><td>Tested model only</td></tr>
+<tr><td>Nightly data enrichment</td><td class="pos">AB</td><td>Latency</td><td>Queue and retry later</td><td>Cheapest tested model</td></tr>
+<tr><td>Customer support chat</td><td class="pos">LA</td><td>Behavior, within tested limits</td><td>Fail over to a tested backup</td><td>Route simple turns to a smaller tested model</td></tr>
+<tr><td>Inline suggestions</td><td class="pos">LB</td><td>Availability</td><td>Skip the suggestion</td><td>One fast tested model</td></tr>
+</tbody>
+</table>
+</div>
+<p>The point isn’t these specific choices. It’s that each workload gets an explicit, written-down position instead of inheriting whatever the router does by default.</p>
+
+<h2>What behavior-aware routing looks like</h2>
+<p>A plain router changes the endpoint and nothing else. Behavior-aware routing changes everything that should move with the model.</p>
+<div class="workflow" role="img" aria-label="A task and its behavioral contract flow into a prompt for each model, then the router, then output checks.">
+<div class="rowx"><div class="unit">Task + behavioral contract</div><span class="to" aria-hidden="true">→</span><div class="unit special">Prompt for each model</div><span class="to" aria-hidden="true">→</span><div class="unit">Router</div><span class="to" aria-hidden="true">→</span><div class="unit">Output checks</div></div>
+<p class="caption">The endpoint can change without changing the contract. What changes is the prompt, the provider, and the proof that the output still passes.</p>
+</div>
+<p>It sits between your app and the router. Your app names the task and its LAB position. The layer picks an eligible model, applies that model’s prompt, parameters and validation rules, and checks the result. A router handles uptime and price. It can’t know what counts as an acceptable underwriting decision.</p>
+
+<h2>Measure behavior, not just uptime</h2>
+<p>Go back to the risk agent from the opening. Every infrastructure metric said the failover worked: valid JSON, on time, zero errors. The one thing that changed, how often it escalated borderline cases, wasn’t on any dashboard.</p>
+<p>So track behavior separately, in two ways. <strong>Fidelity</strong> asks whether a backup keeps the behavioral contract, compared with the primary. <strong>Correctness</strong> asks whether it gets the right answer, compared with ground truth. A backup can be more correct and still break your format, or match the primary perfectly, mistakes included.</p>
+<p>Both are percentages, not yes-or-no. A backup can pass 99% of format checks and still agree on only 90% of key decisions. “99.9% uptime” hides that gap.</p>
+
+<h2>Designing for LAB</h2>
+<p>The goal isn’t to avoid switching models. It’s to make every switch a tested, deliberate decision.</p>
+<ol class="list">
+<li><strong>Give every workload a LAB position.</strong> Write down its deadline, its policy under stress and its policy in normal operation. A summary and a payment decision shouldn’t share fallback rules.</li>
+<li><strong>Keep a prompt for each model.</strong> Version prompts, parameters and validation rules per model. Your app names the task; the routing layer picks the right set for whichever model answers.</li>
+<li><strong>Test every model before it takes traffic.</strong> Backups and cost-saving routes alike. Use a fixed set of hard cases: ambiguity, tool calls, refusals, formats and escalations. Score fidelity and correctness.</li>
+<li><strong>Run failure drills.</strong> Simulate rate limits, lost capacity, slow responses and regional outages. Track on-time answers, completed work, fidelity and correctness separately.</li>
+<li><strong>Retest on every change.</strong> A new model version, prompt, provider or serving setup means a new test. A model that misses the bar shouldn’t take traffic for that workload.</li>
+</ol>
+<p>Measure availability as acceptable work completed, not successful API calls.</p>
+<p class="closing">Every production LLM system already has a LAB position for each workload. The only question is whether someone chose it.</p>
+
+<section class="sources" aria-label="Further reading">
+<h2>Further reading</h2>
+<ol>
+<li><a href="https://groups.csail.mit.edu/tds/lynch-pubs.html">Gilbert and Lynch, <em>Brewer’s conjecture and the feasibility of consistent, available, partition-tolerant web services</em> (2002)</a>, the original CAP proof, and <a href="https://doi.org/10.1109/MC.2012.37">Eric Brewer’s 2012 clarification</a>.</li>
+<li><a href="https://cs.umd.edu/~abadi/papers/abadi-pacelc.pdf">Daniel Abadi, <em>Consistency Tradeoffs in Modern Distributed Database System Design</em> (IEEE Computer, 2012)</a>, which introduces PACELC.</li>
+<li><a href="https://developers.openai.com/api/docs/guides/prompt-engineering">OpenAI prompt engineering guidance</a> and <a href="https://support.claude.com/en/articles/8114533-i-ve-been-using-other-large-language-models-llms-to-power-my-product-how-should-i-alter-my-prompts-when-switching-to-claude">Anthropic’s guide to adapting prompts for Claude</a>.</li>
+<li><a href="https://github.com/OpenRouterTeam/docs/blob/main/guides/routing/model-fallbacks.mdx">OpenRouter model fallbacks</a> and <a href="https://openrouter.ai/blog/insights/reliability-failover/">provider vs. model failover</a>. Fallbacks reuse one request payload; per-model prompts aren’t part of that flow.</li>
+<li><a href="https://github.com/OpenRouterTeam/docs/blob/main/guides/routing/provider-selection.mdx">OpenRouter provider routing and quantization options</a> and <a href="https://openrouter.ai/blog/announcements/provider-variance-introducing-exacto/">provider variance in serving quality</a>.</li>
+<li><a href="https://developers.openai.com/api/docs/deprecations">OpenAI model deprecations</a> and <a href="https://docs.anthropic.com/en/docs/about-claude/model-deprecations">Anthropic model deprecations</a>.</li>
+<li><a href="https://trustedrouter.com/benchmarks/reports/2026-07">TrustedRouter, <em>July 2026 LLM Provider Benchmark Report</em></a>: 274,753 route measurements across 44 providers and 353 models. It measures route operation, not answer quality, and is published by a router vendor.</li>
+<li><a href="https://arxiv.org/abs/2605.02821">Li et al., <em>When Is the Same Model Not the Same Service?</em> (2026)</a>: Q4 2025 measurements of latency, throughput and errors across providers serving the same open-weight models. The authors operate a routing service.</li>
+<li><a href="https://devtoollab.com/blog/llm-api-outages">DevToolLab, <em>LLM API Outages in 2026: 90 Days of Data</em></a>: incidents from 12 provider status pages, July 14 to October 11, 2026, with a public CSV. Incident counts reflect each provider’s posting policy as much as its reliability.</li>
+<li><a href="https://arxiv.org/pdf/2501.12469">Chu et al., <em>An Empirical Characterization of Outages and Incidents in Public Services for Large Language Models</em> (ICPE 2025)</a>.</li>
+</ol>
+</section>
+</article></main>
+</body>
+</html>
